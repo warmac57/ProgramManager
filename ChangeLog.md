@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-02-21
+
+### Added - GitHub Release Pipeline
+- Created `Release.ps1` script to automate the full publish workflow: dotnet publish, zip creation, git commit/push, and GitHub Release in a single command.
+- Installed GitHub CLI (`gh`) via winget for programmatic release creation.
+- Added `ProgramManager-v*.zip` to `.gitignore` to prevent local release zips from being committed.
+- Published v1.0.0 as the initial GitHub Release with release notes covering features, requirements, and installation instructions.
+
 ## 2026-02-20
 
 ### Added - Icon Notes
