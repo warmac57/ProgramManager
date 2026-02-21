@@ -6,7 +6,9 @@
       "Bash(gh:*)",
       "Bash(powershell:*)",
       "Bash(winget:*)",
-      "Bash(cmd.exe:*)"
+      "Bash(cmd.exe:*)",
+      "Bash(cd:*)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }
