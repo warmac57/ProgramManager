@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-02-20
+
+### Added - Icon Notes
+- Each icon now supports an optional free-text note stored alongside the shortcut.
+- Right-click an icon and choose **Edit Note...** to open a small dialog with a multi-line text field.
+- Clearing the note and clicking OK removes it.
+- Notes are saved to `ProgramManagerLayout.xml` as a `note` attribute on each `<Icon>` element; files without the attribute load cleanly (backward compatible).
+- The **All Links** tab now shows a **Note** column so all notes are visible at a glance.
+
+### Added - XML Backups
+- On every app launch the existing `ProgramManagerLayout.xml` and `ProgramManagerSettings.xml` are copied into the `BACKUP-XML` subfolder with a `_YYYYMMDD_HHmmss` timestamp suffix.
+- Only the 10 most recent backups per file are kept; older ones are deleted automatically.
+- Backup failure is silent and non-critical.
+
+### Changed - Source Control Exclusions
+- Added `ProgramManagerLayout.xml`, `ProgramManagerSettings.xml`, and `BACKUP-XML/` to `.gitignore` to prevent local shortcut paths from being committed to the public repository.
+
 ## 2026-02-18
 
 ### Added - Expanded to 8 Grid Tabs

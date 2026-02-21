@@ -46,9 +46,13 @@ Public Class Form1
     ' --- Right-click context menu ---
     Private WithEvents IconContextMenu As New ContextMenuStrip()
     Private mnuOpenFolder As New ToolStripMenuItem("Open Containing Folder")
+    Private mnuEditNote As New ToolStripMenuItem("Edit Note...")
     Private mnuToggleHidden As New ToolStripMenuItem("Hide Folder")
     Private mnuRemove As New ToolStripMenuItem("Remove")
     Private contextTarget As PictureBox = Nothing
+
+    ' --- Notes: maps each PictureBox icon to its user note ---
+    Private iconNotes As New Dictionary(Of PictureBox, String)()
 
     ' --- Tab name textbox references (mapped from designer controls) ---
     Private tabNameTextBoxes() As TextBox
@@ -85,9 +89,11 @@ Public Class Form1
 
         ' Build the right-click context menu.
         AddHandler mnuOpenFolder.Click, AddressOf MnuOpenFolder_Click
+        AddHandler mnuEditNote.Click, AddressOf MnuEditNote_Click
         AddHandler mnuToggleHidden.Click, AddressOf MnuToggleHidden_Click
         AddHandler mnuRemove.Click, AddressOf MnuRemove_Click
         IconContextMenu.Items.Add(mnuOpenFolder)
+        IconContextMenu.Items.Add(mnuEditNote)
         IconContextMenu.Items.Add(mnuToggleHidden)
         IconContextMenu.Items.Add(New ToolStripSeparator())
         IconContextMenu.Items.Add(mnuRemove)
@@ -116,6 +122,7 @@ Public Class Form1
         AddHandler TabControl1.DrawItem, AddressOf TabControl1_DrawItem
         AddHandler TabControl1.SelectedIndexChanged, AddressOf TabControl1_SelectedIndexChanged
 
+        BackupXmlFiles()
         LoadLayout()
     End Sub
 
@@ -343,10 +350,20 @@ Public Class Form1
                     If TypeOf ctrl Is Panel AndAlso ctrl.Controls.Count > 0 Then
                         For Each child As Control In ctrl.Controls
                             If TypeOf child Is PictureBox AndAlso child.Tag IsNot Nothing Then
-                                Dim filePath As String = child.Tag.ToString()
+                                Dim pb As PictureBox = CType(child, PictureBox)
+                                Dim filePath As String = pb.Tag.ToString()
+                                Dim noteText As String = ""
+                                iconNotes.TryGetValue(pb, noteText)
+                                Dim displayName As String
+                                If IO.Directory.Exists(filePath) Then
+                                    displayName = IO.Path.GetFileName(filePath)
+                                Else
+                                    displayName = IO.Path.GetFileNameWithoutExtension(filePath)
+                                End If
                                 Dim item As New ListViewItem(tabName)
-                                item.SubItems.Add(IO.Path.GetFileNameWithoutExtension(filePath))
+                                item.SubItems.Add(displayName)
                                 item.SubItems.Add(filePath)
+                                item.SubItems.Add(noteText)
                                 item.Tag = filePath
                                 lvwAllLinks.Items.Add(item)
                             End If
@@ -491,7 +508,7 @@ Public Class Form1
     ''' Creates a PictureBox with the file's associated icon and a label,
     ''' and places it inside the given cell panel.
     ''' </summary>
-    Private Sub PlaceIconInCell(cell As Panel, filePath As String)
+    Private Sub PlaceIconInCell(cell As Panel, filePath As String, Optional note As String = "")
         Try
             Dim isDirectory As Boolean = IO.Directory.Exists(filePath)
             Dim iconBitmap As Bitmap
@@ -552,6 +569,11 @@ Public Class Form1
             cell.Controls.Add(nameLabel)
             cell.Controls.Add(iconBox)
             iconBox.BringToFront()
+
+            ' Register the note if one was provided.
+            If Not String.IsNullOrEmpty(note) Then
+                iconNotes(iconBox) = note
+            End If
 
             ' Apply hidden indicator if this is a hidden folder on the desktop.
             If isDirectory Then
@@ -643,6 +665,47 @@ Public Class Form1
         End If
     End Sub
 
+    ' --- XML Backup ---
+
+    ''' <summary>
+    ''' Copies the layout and settings XML files into the BACKUP-XML subfolder,
+    ''' stamped with the current date/time. Keeps only the 10 most recent backups
+    ''' per file; older ones are deleted.
+    ''' </summary>
+    Private Sub BackupXmlFiles()
+        Try
+            Dim backupDir As String = IO.Path.Combine(Application.StartupPath, "BACKUP-XML")
+            IO.Directory.CreateDirectory(backupDir)
+
+            Dim timestamp As String = DateTime.Now.ToString("yyyyMMdd_HHmmss")
+
+            Dim filesToBackup() As String = {
+                IO.Path.Combine(Application.StartupPath, "ProgramManagerLayout.xml"),
+                IO.Path.Combine(Application.StartupPath, "ProgramManagerSettings.xml")
+            }
+
+            For Each srcFile As String In filesToBackup
+                If Not IO.File.Exists(srcFile) Then Continue For
+
+                Dim baseName As String = IO.Path.GetFileNameWithoutExtension(srcFile)
+                Dim destPath As String = IO.Path.Combine(backupDir, $"{baseName}_{timestamp}.xml")
+                IO.File.Copy(srcFile, destPath, True)
+
+                ' Prune: keep only the 10 most recent backups for this file.
+                Dim existing As String() = IO.Directory.GetFiles(backupDir, baseName & "_*.xml")
+                Array.Sort(existing)   ' Alphabetical = chronological given the timestamp format.
+                Dim excess As Integer = existing.Length - 10
+                If excess > 0 Then
+                    For i As Integer = 0 To excess - 1
+                        IO.File.Delete(existing(i))
+                    Next
+                End If
+            Next
+        Catch
+            ' Backup failure is non-critical; continue silently.
+        End Try
+    End Sub
+
     ' --- Form Settings Save/Load ---
 
     Private Sub SaveFormSettings()
@@ -727,9 +790,103 @@ Public Class Form1
     Private Sub MnuRemove_Click(sender As Object, e As EventArgs)
         If contextTarget Is Nothing Then Return
         Dim cell As Panel = CType(contextTarget.Parent, Panel)
+        iconNotes.Remove(contextTarget)
         cell.Controls.Clear()
         contextTarget = Nothing
     End Sub
+
+    Private Sub MnuEditNote_Click(sender As Object, e As EventArgs)
+        If contextTarget Is Nothing OrElse contextTarget.Tag Is Nothing Then Return
+        Dim filePath As String = contextTarget.Tag.ToString()
+        Dim currentNote As String = ""
+        If iconNotes.ContainsKey(contextTarget) Then
+            currentNote = iconNotes(contextTarget)
+        End If
+
+        Dim newNote As String = ShowNoteDialog(filePath, currentNote)
+        If newNote Is Nothing Then Return  ' cancelled
+
+        If String.IsNullOrEmpty(newNote) Then
+            iconNotes.Remove(contextTarget)
+        Else
+            iconNotes(contextTarget) = newNote
+        End If
+        SaveLayout()
+    End Sub
+
+    ''' <summary>
+    ''' Shows a simple dialog for entering or editing the note for an icon.
+    ''' Returns the new note text, or Nothing if cancelled.
+    ''' </summary>
+    Private Function ShowNoteDialog(filePath As String, currentNote As String) As String
+        Dim displayName As String
+        If IO.Directory.Exists(filePath) Then
+            displayName = IO.Path.GetFileName(filePath)
+        Else
+            displayName = IO.Path.GetFileNameWithoutExtension(filePath)
+        End If
+
+        Dim result As String = Nothing
+
+        Using dlg As New Form()
+            dlg.Text = "Edit Note"
+            dlg.Size = New Size(450, 270)
+            dlg.FormBorderStyle = FormBorderStyle.FixedDialog
+            dlg.StartPosition = FormStartPosition.CenterParent
+            dlg.MaximizeBox = False
+            dlg.MinimizeBox = False
+
+            Dim lbl As New Label() With {
+                .Text = "Note for: " & displayName,
+                .AutoSize = True,
+                .Location = New Point(12, 12)
+            }
+
+            Dim txt As New TextBox() With {
+                .Multiline = True,
+                .ScrollBars = ScrollBars.Vertical,
+                .Text = currentNote,
+                .Location = New Point(12, 38),
+                .Size = New Size(382, 110),
+                .Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right Or AnchorStyles.Bottom
+            }
+
+            Dim btnOK As New Button() With {
+                .Text = "OK",
+                .DialogResult = DialogResult.OK,
+                .Size = New Size(80, 30),
+                .Location = New Point(234, 158)
+            }
+
+            Dim btnCancel As New Button() With {
+                .Text = "Cancel",
+                .DialogResult = DialogResult.Cancel,
+                .Size = New Size(80, 30),
+                .Location = New Point(320, 158)
+            }
+
+            dlg.Controls.AddRange({lbl, txt, btnOK, btnCancel})
+            dlg.AcceptButton = btnOK
+            dlg.CancelButton = btnCancel
+
+            If isDarkMode Then
+                dlg.BackColor = DarkFormBack
+                lbl.ForeColor = DarkForeColor
+                txt.BackColor = DarkControlBack
+                txt.ForeColor = DarkForeColor
+                btnOK.BackColor = DarkControlBack
+                btnOK.ForeColor = DarkForeColor
+                btnCancel.BackColor = DarkControlBack
+                btnCancel.ForeColor = DarkForeColor
+            End If
+
+            If dlg.ShowDialog(Me) = DialogResult.OK Then
+                result = txt.Text
+            End If
+        End Using
+
+        Return result
+    End Function
 
     Private Sub MnuToggleHidden_Click(sender As Object, e As EventArgs)
         If contextTarget Is Nothing OrElse contextTarget.Tag Is Nothing Then Return
@@ -873,10 +1030,15 @@ Public Class Form1
                         If TypeOf ctrl Is Panel AndAlso ctrl.Controls.Count > 0 Then
                             For Each child As Control In ctrl.Controls
                                 If TypeOf child Is PictureBox AndAlso child.Tag IsNot Nothing Then
+                                    Dim pb As PictureBox = CType(child, PictureBox)
                                     Dim iconEl As XmlElement = doc.CreateElement("Icon")
                                     iconEl.SetAttribute("column", col.ToString())
                                     iconEl.SetAttribute("row", row.ToString())
-                                    iconEl.SetAttribute("filePath", child.Tag.ToString())
+                                    iconEl.SetAttribute("filePath", pb.Tag.ToString())
+                                    Dim savedNote As String = ""
+                                    If iconNotes.TryGetValue(pb, savedNote) AndAlso Not String.IsNullOrEmpty(savedNote) Then
+                                        iconEl.SetAttribute("note", savedNote)
+                                    End If
                                     tabElement.AppendChild(iconEl)
                                 End If
                             Next
@@ -934,13 +1096,14 @@ Public Class Form1
                         Dim col As Integer = Integer.Parse(node.Attributes("column").Value)
                         Dim row As Integer = Integer.Parse(node.Attributes("row").Value)
                         Dim filePath As String = node.Attributes("filePath").Value
+                        Dim note As String = If(node.Attributes("note")?.Value, "")
 
                         If col < 0 OrElse col >= tlp.ColumnCount Then Continue For
                         If row < 0 OrElse row >= tlp.RowCount Then Continue For
 
                         Dim cell As Control = tlp.GetControlFromPosition(col, row)
                         If TypeOf cell Is Panel AndAlso cell.Controls.Count = 0 Then
-                            PlaceIconInCell(CType(cell, Panel), filePath)
+                            PlaceIconInCell(CType(cell, Panel), filePath, note)
                         End If
                     Next
                 Next

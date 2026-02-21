@@ -45,6 +45,7 @@ Partial Class Form1
         colTab = New ColumnHeader()
         colName = New ColumnHeader()
         colPath = New ColumnHeader()
+        colNote = New ColumnHeader()
         Tab5SettingsPanel = New Panel()
         Tab5SettingsTable = New TableLayoutPanel()
         lblTabName1 = New Label()
@@ -377,7 +378,7 @@ Partial Class Form1
         ' 
         ' lvwAllLinks
         ' 
-        lvwAllLinks.Columns.AddRange(New ColumnHeader() {colTab, colName, colPath})
+        lvwAllLinks.Columns.AddRange(New ColumnHeader() {colTab, colName, colPath, colNote})
         lvwAllLinks.Dock = DockStyle.Fill
         lvwAllLinks.FullRowSelect = True
         lvwAllLinks.GridLines = True
@@ -398,12 +399,17 @@ Partial Class Form1
         ' 
         colName.Text = "Name"
         colName.Width = 200
-        ' 
+        '
         ' colPath
-        ' 
+        '
         colPath.Text = "Path"
         colPath.Width = 300
-        ' 
+        '
+        ' colNote
+        '
+        colNote.Text = "Note"
+        colNote.Width = 200
+        '
         ' Tab5SettingsPanel
         ' 
         Tab5SettingsPanel.Controls.Add(Tab5SettingsTable)
@@ -734,6 +740,7 @@ Partial Class Form1
     Friend WithEvents colTab As ColumnHeader
     Friend WithEvents colName As ColumnHeader
     Friend WithEvents colPath As ColumnHeader
+    Friend WithEvents colNote As ColumnHeader
     Friend WithEvents lblSeparator As Label
 
 End Class

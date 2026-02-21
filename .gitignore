@@ -399,3 +399,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# ProgramManager runtime data (contains local paths; excluded for privacy)
+ProgramManagerLayout.xml
+ProgramManagerSettings.xml
+BACKUP-XML/
