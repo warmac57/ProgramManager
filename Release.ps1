@@ -86,18 +86,18 @@ $Message
 
 ## Features
 
-- **Tabbed grid layout** — 8 tabs with 4x4 grids (128 shortcut slots) plus an All Links management tab
-- **Drag and drop** — Drop files and folders from Explorer onto any grid cell
-- **Icon rearrangement** — Drag icons between cells to swap positions
-- **File and folder support** — Shortcuts to both files and folders with proper Windows icons
-- **Launch on double-click** — Open any shortcut directly from the grid or the All Links list
-- **Icon notes** — Attach a free-text note to any shortcut via right-click; notes are saved to XML and visible in the All Links tab
-- **Tab renaming** — Customize all 8 tab names from the management tab with live preview
-- **Hide/unhide desktop folders** — Toggle the Windows Hidden attribute on desktop folders via right-click
-- **Dark / light mode** — Switch themes from the management tab; preference is persisted
-- **Roll-up** — Double-click the title bar to collapse the window to just the title bar
-- **Automatic XML backups** — On every launch, both data files are backed up to a BACKUP-XML subfolder; the last 10 backups per file are retained
-- **Portable** — All settings stored next to the executable; copy the folder for independent instances
+- **Tabbed grid layout** - 8 tabs with 4x4 grids (128 shortcut slots) plus an All Links management tab
+- **Drag and drop** - Drop files and folders from Explorer onto any grid cell
+- **Icon rearrangement** - Drag icons between cells to swap positions
+- **File and folder support** - Shortcuts to both files and folders with proper Windows icons
+- **Launch on double-click** - Open any shortcut directly from the grid or the All Links list
+- **Icon notes** - Attach a free-text note to any shortcut via right-click; notes are saved to XML and visible in the All Links tab
+- **Tab renaming** - Customize all 8 tab names from the management tab with live preview
+- **Hide/unhide desktop folders** - Toggle the Windows Hidden attribute on desktop folders via right-click
+- **Dark / light mode** - Switch themes from the management tab; preference is persisted
+- **Roll-up** - Double-click the title bar to collapse the window to just the title bar
+- **Automatic XML backups** - On every launch, both data files are backed up to a BACKUP-XML subfolder; the last 10 backups per file are retained
+- **Portable** - All settings stored next to the executable; copy the folder for independent instances
 
 ## Requirements
 
@@ -114,7 +114,7 @@ No installer required. All settings are stored next to the executable.
 
 ## Getting Started
 
-1. Drag files or folders from Windows Explorer onto any cell in Tabs 1–8
+1. Drag files or folders from Windows Explorer onto any cell in Tabs 1-8
 2. Double-click an icon to launch it
 3. Drag icons between cells to rearrange
 4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove)
