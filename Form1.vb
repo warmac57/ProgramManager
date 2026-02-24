@@ -544,6 +544,7 @@ Public Class Form1
             AddHandler iconBox.MouseDown, AddressOf IconBox_MouseDown
             AddHandler iconBox.MouseMove, AddressOf IconBox_MouseMove
             AddHandler iconBox.MouseUp, AddressOf IconBox_MouseUp
+            AddHandler iconBox.Paint, AddressOf IconBox_Paint
 
             ' Add a label below the icon showing the name.
             Dim displayName As String
@@ -616,6 +617,36 @@ Public Class Form1
         ' Reset drag tracking if the user released without moving far enough.
         dragStartIcon = Nothing
         dragStartPoint = Point.Empty
+    End Sub
+
+    ' --- Note indicator badge painted on the icon ---
+
+    Private Sub IconBox_Paint(sender As Object, e As PaintEventArgs)
+        Dim pb As PictureBox = CType(sender, PictureBox)
+        Dim hasNote As Boolean = iconNotes.ContainsKey(pb) AndAlso Not String.IsNullOrEmpty(iconNotes(pb))
+        If Not hasNote Then Return
+
+        Const BadgeSize As Integer = 20
+        Const Margin As Integer = 2
+        Dim x As Integer = pb.Width - BadgeSize - Margin
+        Dim y As Integer = Margin
+
+        e.Graphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+
+        Using bgBrush As New SolidBrush(Color.FromArgb(220, 40, 167, 69))
+            e.Graphics.FillEllipse(bgBrush, x, y, BadgeSize, BadgeSize)
+        End Using
+
+        Using fgBrush As New SolidBrush(Color.White)
+            Using badgeFont As New Font("Segoe UI", 10F, FontStyle.Bold)
+                Dim sf As New StringFormat() With {
+                    .Alignment = StringAlignment.Center,
+                    .LineAlignment = StringAlignment.Center
+                }
+                e.Graphics.DrawString("✓", badgeFont, fgBrush,
+                                      New RectangleF(x, y, BadgeSize, BadgeSize), sf)
+            End Using
+        End Using
     End Sub
 
     ' --- Icon Double-Click: launch the file ---
@@ -811,6 +842,7 @@ Public Class Form1
         Else
             iconNotes(contextTarget) = newNote
         End If
+        contextTarget?.Invalidate()
         SaveLayout()
     End Sub
 

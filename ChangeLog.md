@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-02-24
+
+### Changed - Note Indicator Badge on Icons
+- Icons that have a note now display a small green ✓ badge in the top-right corner of the icon image.
+- The badge is drawn via the PictureBox Paint event and repaints immediately when a note is added, edited, or removed.
+- Icons without a note are unchanged in appearance.
+
 ## 2026-02-21
 
 ### Added - GitHub Release Pipeline

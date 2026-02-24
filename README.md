@@ -10,7 +10,7 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 - **Icon rearrangement** - Drag icons between cells to swap positions
 - **File and folder support** - Shortcuts to both files and folders with proper Windows icons
 - **Launch on double-click** - Open any shortcut directly from the grid or the All Links list
-- **Icon notes** - Attach a free-text note to any shortcut via right-click; notes are saved to XML and visible in the All Links tab
+- **Icon notes** - Attach a free-text note to any shortcut via right-click; a green ✓ badge appears on the icon when a note exists; notes are saved to XML and visible in the All Links tab
 - **Tab renaming** - Customize all 8 tab names from the management tab with live preview
 - **Hide/unhide desktop folders** - Toggle the Windows Hidden attribute on desktop folders via right-click
 - **Dark / light mode** - Switch themes from the management tab; preference is persisted
@@ -59,6 +59,10 @@ All data is stored in the application directory (portable, no registry or AppDat
 Copy the entire application folder to a new location to run independent instances. Each copy maintains its own settings and shortcuts.
 
 ## Recent Changes
+
+### 2026-02-24
+
+- Icons with a note now display a green ✓ badge in the top-right corner of the icon
 
 ### 2026-02-20
 

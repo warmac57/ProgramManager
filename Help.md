@@ -60,6 +60,7 @@ Each shortcut can have an optional free-text note attached to it.
 - Click **OK** to save, or **Cancel** to discard changes.
 - Clearing the text field and clicking OK removes the note entirely.
 - Notes are saved in `ProgramManagerLayout.xml` alongside the shortcut path.
+- Icons that have a note display a small green **✓** badge in the top-right corner of the icon.
 - The note for each shortcut is visible in the **Note** column on the All Links tab.
 
 ---
