@@ -92,6 +92,7 @@ Public Class Form1
         AddHandler mnuEditNote.Click, AddressOf MnuEditNote_Click
         AddHandler mnuToggleHidden.Click, AddressOf MnuToggleHidden_Click
         AddHandler mnuRemove.Click, AddressOf MnuRemove_Click
+
         IconContextMenu.Items.Add(mnuOpenFolder)
         IconContextMenu.Items.Add(mnuEditNote)
         IconContextMenu.Items.Add(mnuToggleHidden)
