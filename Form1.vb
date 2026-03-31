@@ -100,8 +100,8 @@ Public Class Form1
         IconContextMenu.Items.Add(mnuRemove)
 
         ' Map designer controls into arrays for easy indexed access.
-        gridPanels = {GridPanel1, GridPanel2, GridPanel3, GridPanel4, GridPanel5, GridPanel6, GridPanel7, GridPanel8}
-        tabNameTextBoxes = {txtTabName1, txtTabName2, txtTabName3, txtTabName4, txtTabName5, txtTabName6, txtTabName7, txtTabName8}
+        gridPanels = {GridPanel1, GridPanel2, GridPanel3, GridPanel4, GridPanel5, GridPanel6, GridPanel7, GridPanel8, GridPanel9}
+        tabNameTextBoxes = {txtTabName1, txtTabName2, txtTabName3, txtTabName4, txtTabName5, txtTabName6, txtTabName7, txtTabName8, txtTabName9}
 
         ' Populate cell panels inside each grid.
         For Each tlp As TableLayoutPanel In gridPanels
@@ -109,7 +109,7 @@ Public Class Form1
         Next
 
         ' Wire up tab name textboxes to update tab headers live.
-        For i As Integer = 0 To 7
+        For i As Integer = 0 To 8
             tabNameTextBoxes(i).Tag = i
             AddHandler tabNameTextBoxes(i).TextChanged, AddressOf TabNameTextBox_TextChanged
         Next
@@ -227,8 +227,8 @@ Public Class Form1
             Me.BackColor = DarkFormBack
             TabControl1.BackColor = DarkFormBack
 
-            ' Style tabs 1-8
-            For i As Integer = 0 To 7
+            ' Style tabs 1-9 (icon grid tabs)
+            For i As Integer = 0 To 8
                 Dim tabPage As TabPage = TabControl1.TabPages(i)
                 tabPage.BackColor = DarkTabBack
                 tabPage.ForeColor = DarkForeColor
@@ -267,7 +267,7 @@ Public Class Form1
             Me.BackColor = LightFormBack
             TabControl1.BackColor = LightFormBack
 
-            For i As Integer = 0 To 7
+            For i As Integer = 0 To 8
                 Dim tabPage As TabPage = TabControl1.TabPages(i)
                 tabPage.BackColor = SystemColors.Window
                 tabPage.ForeColor = LightForeColor
@@ -331,10 +331,10 @@ Public Class Form1
     End Sub
 
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs)
-        If TabControl1.SelectedIndex = 8 Then
+        If TabControl1.SelectedIndex = 9 Then
             RefreshAllLinksList()
             ' Also refresh the tab name textboxes to reflect current names.
-            For i As Integer = 0 To 7
+            For i As Integer = 0 To 8
                 tabNameTextBoxes(i).Text = TabControl1.TabPages(i).Text
             Next
         End If
@@ -342,7 +342,7 @@ Public Class Form1
 
     Private Sub RefreshAllLinksList()
         lvwAllLinks.Items.Clear()
-        For tabIndex As Integer = 0 To 7
+        For tabIndex As Integer = 0 To 8
             Dim tlp As TableLayoutPanel = gridPanels(tabIndex)
             Dim tabName As String = TabControl1.TabPages(tabIndex).Text
             For row As Integer = 0 To tlp.RowCount - 1
@@ -397,7 +397,7 @@ Public Class Form1
 
     Private Function GetActiveTableLayoutPanel() As TableLayoutPanel
         Dim idx As Integer = TabControl1.SelectedIndex
-        If idx >= 0 AndAlso idx <= 7 Then
+        If idx >= 0 AndAlso idx <= 8 Then
             Return gridPanels(idx)
         End If
         Return Nothing
@@ -1049,7 +1049,7 @@ Public Class Form1
             Dim tabsElement As XmlElement = doc.CreateElement("Tabs")
             root.AppendChild(tabsElement)
 
-            For tabIndex As Integer = 0 To 7
+            For tabIndex As Integer = 0 To 8
                 Dim tlp As TableLayoutPanel = gridPanels(tabIndex)
 
                 Dim tabElement As XmlElement = doc.CreateElement("Tab")
@@ -1112,7 +1112,7 @@ Public Class Form1
             If tabNodes IsNot Nothing AndAlso tabNodes.Count > 0 Then
                 For Each tabNode As XmlNode In tabNodes
                     Dim tabIndex As Integer = Integer.Parse(tabNode.Attributes("index").Value)
-                    If tabIndex < 0 OrElse tabIndex > 7 Then Continue For
+                    If tabIndex < 0 OrElse tabIndex > 8 Then Continue For
 
                     ' Restore tab name.
                     Dim tabName As String = tabNode.Attributes("name")?.Value

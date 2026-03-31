@@ -5,7 +5,7 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 
 ## Features
 
-- **Tabbed grid layout** - 8 tabs with 4x4 grids (128 shortcut slots) plus an All Links management tab
+- **Tabbed grid layout** - 9 tabs with 4x4 grids (144 shortcut slots) plus an All Links management tab
 - **Drag and drop** - Drop files and folders from Explorer onto any grid cell
 - **Icon rearrangement** - Drag icons between cells to swap positions
 - **File and folder support** - Shortcuts to both files and folders with proper Windows icons
@@ -34,7 +34,7 @@ dotnet run
 
 ### Usage
 
-1. Drag files or folders from Windows Explorer onto any cell in Tabs 1-8.
+1. Drag files or folders from Windows Explorer onto any cell in Tabs 1-8 or the eMails tab.
 2. Double-click an icon to launch it.
 3. Drag icons between cells to rearrange.
 4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove).
@@ -59,6 +59,10 @@ All data is stored in the application directory (portable, no registry or AppDat
 Copy the entire application folder to a new location to run independent instances. Each copy maintains its own settings and shortcuts.
 
 ## Recent Changes
+
+### 2026-03-30
+
+- Added a 9th icon grid tab titled "eMails" (renameable via All Links settings panel), increasing total shortcut slots to 144
 
 ### 2026-02-24
 

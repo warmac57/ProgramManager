@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-03-30
+
+### Added - eMails Tab
+- Added a 9th icon grid tab titled "eMails" inserted between Tab 8 and the All Links management tab.
+- The eMails tab is a full 4×4 icon grid (16 slots), bringing total shortcut capacity to 144.
+- The tab name is editable from the All Links settings panel alongside Tabs 1-8.
+- Existing XML layout data for Tabs 1-8 is fully preserved; the eMails tab starts empty on first launch after the update.
+
 ## 2026-02-24
 
 ### Changed - Note Indicator Badge on Icons
