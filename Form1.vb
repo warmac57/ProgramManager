@@ -54,6 +54,9 @@ Public Class Form1
     ' --- Notes: maps each PictureBox icon to its user note ---
     Private iconNotes As New Dictionary(Of PictureBox, String)()
 
+    ' --- Missing links: tracks icons whose file/folder path no longer exists ---
+    Private missingLinks As New HashSet(Of PictureBox)()
+
     ' --- Tab name textbox references (mapped from designer controls) ---
     Private tabNameTextBoxes() As TextBox
 
@@ -512,9 +515,13 @@ Public Class Form1
     Private Sub PlaceIconInCell(cell As Panel, filePath As String, Optional note As String = "")
         Try
             Dim isDirectory As Boolean = IO.Directory.Exists(filePath)
+            Dim isMissing As Boolean = Not isDirectory AndAlso Not IO.File.Exists(filePath)
             Dim iconBitmap As Bitmap
 
-            If isDirectory Then
+            If isMissing Then
+                ' File or folder no longer exists — use a generic warning icon.
+                iconBitmap = SystemIcons.Warning.ToBitmap()
+            ElseIf isDirectory Then
                 ' Use SHGetFileInfo to get the folder icon.
                 Dim shfi As New SHFILEINFO()
                 SHGetFileInfo(filePath, 0, shfi, CUInt(Marshal.SizeOf(shfi)),
@@ -536,7 +543,7 @@ Public Class Form1
                 .SizeMode = PictureBoxSizeMode.Zoom,
                 .Tag = filePath,
                 .Cursor = Cursors.Hand,
-                .BackColor = Color.Transparent,
+                .BackColor = If(isMissing, Color.FromArgb(80, Color.Gray), Color.Transparent),
                 .ContextMenuStrip = IconContextMenu
             }
 
@@ -548,11 +555,13 @@ Public Class Form1
             AddHandler iconBox.Paint, AddressOf IconBox_Paint
 
             ' Add a label below the icon showing the name.
+            ' GetFileNameWithoutExtension works correctly even for missing paths and folders.
             Dim displayName As String
             If isDirectory Then
                 displayName = IO.Path.GetFileName(filePath)
             Else
                 displayName = IO.Path.GetFileNameWithoutExtension(filePath)
+                If String.IsNullOrEmpty(displayName) Then displayName = IO.Path.GetFileName(filePath)
             End If
 
             Dim nameLabel As New Label() With {
@@ -562,7 +571,8 @@ Public Class Form1
                 .Dock = DockStyle.Bottom,
                 .Height = 30,
                 .Font = New Font("Segoe UI", 8),
-                .BackColor = Color.Transparent
+                .BackColor = Color.Transparent,
+                .ForeColor = If(isMissing, Color.Gray, SystemColors.ControlText)
             }
 
             ' Layout: icon centered above the label.
@@ -572,13 +582,18 @@ Public Class Form1
             cell.Controls.Add(iconBox)
             iconBox.BringToFront()
 
+            ' Track missing links so double-click shows a helpful message instead of crashing.
+            If isMissing Then
+                missingLinks.Add(iconBox)
+            End If
+
             ' Register the note if one was provided.
             If Not String.IsNullOrEmpty(note) Then
                 iconNotes(iconBox) = note
             End If
 
-            ' Apply hidden indicator if this is a hidden folder on the desktop.
-            If isDirectory Then
+            ' Apply hidden indicator only for existing desktop folders.
+            If isDirectory AndAlso Not isMissing Then
                 UpdateHiddenIndicator(iconBox)
             End If
 
@@ -657,6 +672,16 @@ Public Class Form1
         If clickedIcon.Tag Is Nothing Then Return
 
         Dim filePath As String = clickedIcon.Tag.ToString()
+
+        ' If the link is known-missing, inform the user rather than trying to launch.
+        If missingLinks.Contains(clickedIcon) Then
+            MessageBox.Show("This shortcut points to a file or folder that no longer exists." & vbCrLf & vbCrLf &
+                            "Path: " & filePath & vbCrLf & vbCrLf &
+                            "Right-click the icon and choose Remove to delete it from the grid.",
+                            "Missing Link", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
         Try
             Dim startInfo As New ProcessStartInfo(filePath) With {
                 .UseShellExecute = True,
@@ -823,6 +848,7 @@ Public Class Form1
         If contextTarget Is Nothing Then Return
         Dim cell As Panel = CType(contextTarget.Parent, Panel)
         iconNotes.Remove(contextTarget)
+        missingLinks.Remove(contextTarget)
         cell.Controls.Clear()
         contextTarget = Nothing
     End Sub

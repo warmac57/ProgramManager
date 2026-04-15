@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-04-14
+
+### Changed - Missing Link Handling
+- Icons whose file or folder path no longer exists are now preserved in the grid instead of being silently dropped.
+- Missing-link icons display a warning icon with a grey overlay and greyed label so they are visually distinct but remain in place.
+- Double-clicking a missing-link icon shows an informative message explaining the path is gone and how to remove it.
+- The shortcut entry continues to be saved to `ProgramManagerLayout.xml` on every save, so the link is not lost across restarts.
+- Right-click → **Remove** works normally and cleans up the missing-link entry completely.
+
 ## 2026-03-30
 
 ### Added - eMails Tab

@@ -16,6 +16,7 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 - **Dark / light mode** - Switch themes from the management tab; preference is persisted
 - **Roll-up** - Double-click the title bar to collapse the window to just the title bar
 - **Automatic XML backups** - On every launch, both data files are backed up to a `BACKUP-XML` subfolder; the last 10 backups per file are retained
+- **Missing link detection** - Icons whose file or folder no longer exists are greyed out in place rather than silently removed; double-clicking shows a helpful message and the entry is preserved in XML until you choose to remove it
 - **Portable** - All settings stored next to the executable; copy the folder for independent instances
 
 ## Getting Started
@@ -59,6 +60,10 @@ All data is stored in the application directory (portable, no registry or AppDat
 Copy the entire application folder to a new location to run independent instances. Each copy maintains its own settings and shortcuts.
 
 ## Recent Changes
+
+### 2026-04-14
+
+- Missing-link icons are now greyed out and kept in the grid rather than silently dropped; they survive saves and restarts until explicitly removed
 
 ### 2026-03-30
 
