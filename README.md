@@ -19,7 +19,7 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 - **Missing link detection** - Icons whose file or folder no longer exists are greyed out in place rather than silently removed; double-clicking shows a helpful message and the entry is preserved in XML until you choose to remove it
 - **Portable** - All settings stored next to the executable; copy the folder for independent instances
 
-<img width="1116" height="814" alt="prg-man " src="https://github.com/user-attachments/assets/08abb6e1-356f-4ed2-b62d-6e508473e69a" />
+<img width="500" height="400" alt="prg-man " src="https://github.com/user-attachments/assets/08abb6e1-356f-4ed2-b62d-6e508473e69a" />
 
 ## Getting Started
 
