@@ -66,7 +66,7 @@ Copy the entire application folder to a new location to run independent instance
 ### 2026-04-23
 
 - Added a 10th icon grid tab titled "Tab 10" (renameable via All Links settings panel), increasing total shortcut slots to 160
-- 
+
 ### 2026-04-14
 
 - Missing-link icons are now greyed out and kept in the grid rather than silently dropped; they survive saves and restarts until explicitly removed
