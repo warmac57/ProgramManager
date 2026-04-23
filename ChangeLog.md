@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-04-23
+
+### Added - Tab 10
+- Added a 10th icon grid tab titled "Tab 10" inserted between eMails and the All Links management tab.
+- The tab is a full 4×4 icon grid (16 slots), bringing total shortcut capacity to 160.
+- The tab name is editable from the All Links settings panel (shown in the right column alongside the eMails name field).
+- Existing XML layout data for Tabs 1-9 is fully preserved; Tab 10 starts empty on first launch after the update.
+
 ## 2026-04-14
 
 ### Changed - Missing Link Handling
