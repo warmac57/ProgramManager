@@ -14,6 +14,7 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 - **Tab renaming** - Customize all 10 tab names from the management tab with live preview
 - **Hide/unhide desktop folders** - Toggle the Windows Hidden attribute on desktop folders via right-click
 - **Dark / light mode** - Switch themes from the management tab; preference is persisted
+- **Print Screen capture** - While Program Manager is running, pressing `Prt Sc` saves a full-screen capture to `Pictures\Screens\screens_<timestamp>.jpg`; the title bar briefly flashes green to confirm the save (Windows 11)
 - **Roll-up** - Double-click the title bar to collapse the window to just the title bar
 - **Automatic XML backups** - On every launch, both data files are backed up to a `BACKUP-XML` subfolder; the last 10 backups per file are retained
 - **Missing link detection** - Icons whose file or folder no longer exists are greyed out in place rather than silently removed; double-clicking shows a helpful message and the entry is preserved in XML until you choose to remove it
@@ -62,6 +63,12 @@ All data is stored in the application directory (portable, no registry or AppDat
 Copy the entire application folder to a new location to run independent instances. Each copy maintains its own settings and shortcuts.
 
 ## Recent Changes
+
+### 2026-06-08
+
+- Added background Print Screen capture: while the app runs, pressing `Prt Sc` saves a full-screen JPEG to `Pictures\Screens\` (filenames stamped `screens_yyyy-MM-dd_HH-mm-ss.jpg`, with a counter appended if two captures land in the same second)
+- The title bar flashes green for a moment to confirm each save (uses the Windows 11 DWM caption color; no-op on Windows 10)
+- The screen is captured directly by the app, so the clipboard is left untouched and all monitors are included
 
 ### 2026-04-23
 

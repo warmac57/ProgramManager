@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-06-08
+
+### Added - Background Print Screen Capture
+- While Program Manager is running, pressing the `Prt Sc` key saves a full-screen capture to `Pictures\Screens\`.
+- Files are named `screens_yyyy-MM-dd_HH-mm-ss.jpg`; if two captures occur in the same second, a counter (`_2`, `_3`, …) is appended so nothing is overwritten.
+- The app captures the screen directly (all monitors / virtual desktop), leaving the clipboard untouched. `Alt+Prt Sc` still saves a full-screen image.
+- Capture/encoding runs on a background thread so the low-level keyboard hook returns promptly and is never dropped by Windows.
+- Implemented in a dedicated `ScreenshotMonitor` class that installs a global `WH_KEYBOARD_LL` hook on form load and removes it on close, so monitoring only runs while the app is active.
+
+### Added - Save Confirmation Flash
+- The title bar briefly flashes green (~0.6 s) after each screenshot is saved, then restores to the default color.
+- Uses the Windows 11 DWM caption-color attribute (`DWMWA_CAPTION_COLOR`); on Windows 10 the call is a no-op (no flash, no error).
+
 ## 2026-04-23
 
 ### Added - Tab 10

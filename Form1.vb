@@ -25,6 +25,15 @@ Public Class Form1
     Private Shared Function DestroyIcon(hIcon As IntPtr) As Boolean
     End Function
 
+    ' --- DWM title bar caption color (Windows 11) for the save-confirmation flash ---
+    <DllImport("dwmapi.dll", PreserveSig:=True)>
+    Private Shared Function DwmSetWindowAttribute(hwnd As IntPtr, attr As Integer,
+                                                  ByRef attrValue As Integer, attrSize As Integer) As Integer
+    End Function
+
+    Private Const DWMWA_CAPTION_COLOR As Integer = 35
+    Private Const DWMWA_COLOR_DEFAULT As Integer = -1   ' restores the system default caption color
+
     Private Const SHGFI_ICON As UInteger = &H100
     Private Const SHGFI_LARGEICON As UInteger = &H0
 
@@ -65,6 +74,12 @@ Public Class Form1
 
     ' --- Theme state ---
     Private isDarkMode As Boolean = False
+
+    ' --- Screenshot monitor: saves Prt Sc captures to Pictures\Screens while the app runs ---
+    Private ReadOnly screenshotMonitor As New ScreenshotMonitor()
+
+    ' Timer that restores the title bar color after the green "saved" flash.
+    Private titleFlashTimer As Timer
 
     ' Dark theme colors
     Private ReadOnly DarkFormBack As Color = Color.FromArgb(30, 30, 30)
@@ -128,6 +143,38 @@ Public Class Form1
 
         BackupXmlFiles()
         LoadLayout()
+
+        ' Start watching for the Prt Sc key for the lifetime of the app.
+        AddHandler screenshotMonitor.ScreenshotSaved, AddressOf OnScreenshotSaved
+        screenshotMonitor.StartMonitoring()
+    End Sub
+
+    ' Flash the title bar green when a screenshot lands in the Screens folder.
+    ' The event fires on a background thread, so marshal back to the UI thread.
+    Private Sub OnScreenshotSaved(sender As Object, e As EventArgs)
+        If IsHandleCreated Then
+            BeginInvoke(New Action(AddressOf FlashTitleBarSaved))
+        End If
+    End Sub
+
+    Private Sub FlashTitleBarSaved()
+        ' Set the caption to green now; a one-shot timer restores the default.
+        Dim green As Integer = ColorTranslator.ToWin32(Color.FromArgb(46, 204, 113))
+        DwmSetWindowAttribute(Me.Handle, DWMWA_CAPTION_COLOR, green, 4)
+
+        If titleFlashTimer Is Nothing Then
+            titleFlashTimer = New Timer() With {.Interval = 600}
+            AddHandler titleFlashTimer.Tick,
+                Sub()
+                    titleFlashTimer.Stop()
+                    Dim defaultColor As Integer = DWMWA_COLOR_DEFAULT
+                    DwmSetWindowAttribute(Me.Handle, DWMWA_CAPTION_COLOR, defaultColor, 4)
+                End Sub
+        End If
+
+        ' Restart the timer so rapid captures keep the flash visible, then settle.
+        titleFlashTimer.Stop()
+        titleFlashTimer.Start()
     End Sub
 
     Private Sub TabControl1_DrawItem(sender As Object, e As DrawItemEventArgs)
@@ -169,6 +216,8 @@ Public Class Form1
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         SaveLayout()
         SaveFormSettings()
+        screenshotMonitor.Dispose()
+        titleFlashTimer?.Dispose()
     End Sub
 
     ' --- Table Setup ---
