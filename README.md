@@ -14,7 +14,8 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 - **Tab renaming** - Customize all 10 tab names from the management tab with live preview
 - **Hide/unhide desktop folders** - Toggle the Windows Hidden attribute on desktop folders via right-click
 - **Dark / light mode** - Switch themes from the management tab; preference is persisted
-- **Print Screen capture** - While Program Manager is running, pressing `Prt Sc` saves a full-screen capture to `Pictures\Screens\screens_<timestamp>.jpg`; the title bar briefly flashes green to confirm the save (Windows 11)
+- **Print Screen capture** - While Program Manager is running, pressing `Prt Sc` saves a full-screen capture to `screens_<timestamp>.jpg`; the title bar briefly flashes green to confirm the save (Windows 11)
+- **Custom screenshot folder** - Captures save to `Pictures\Screens` by default, or drag a folder onto the **Screenshots** drop-box on the All Links tab to choose your own location; the choice is persisted and a **Use Default Folder** button reverts it
 - **Roll-up** - Double-click the title bar to collapse the window to just the title bar
 - **Automatic XML backups** - On every launch, both data files are backed up to a `BACKUP-XML` subfolder; the last 10 backups per file are retained
 - **Missing link detection** - Icons whose file or folder no longer exists are greyed out in place rather than silently removed; double-clicking shows a helpful message and the entry is preserved in XML until you choose to remove it
@@ -42,7 +43,7 @@ dotnet run
 2. Double-click an icon to launch it.
 3. Drag icons between cells to rearrange.
 4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove).
-5. Use the All Links tab to rename tabs, toggle dark mode, and view all shortcuts with their notes in a list.
+5. Use the All Links tab to rename tabs, toggle dark mode, set the screenshot save folder, and view all shortcuts with their notes in a list.
 
 For detailed feature documentation, see [Help.md](Help.md).
 
@@ -52,7 +53,7 @@ All data is stored in the application directory (portable, no registry or AppDat
 
 | File | Contents |
 |---|---|
-| `ProgramManagerLayout.xml` | Shortcut positions, tab names, icon notes, dark mode preference |
+| `ProgramManagerLayout.xml` | Shortcut positions, tab names, icon notes, dark mode preference, screenshot save folder |
 | `ProgramManagerSettings.xml` | Window size, position, and state |
 | `BACKUP-XML/` | Timestamped backups of both XML files (last 10 per file) |
 
@@ -63,6 +64,12 @@ All data is stored in the application directory (portable, no registry or AppDat
 Copy the entire application folder to a new location to run independent instances. Each copy maintains its own settings and shortcuts.
 
 ## Recent Changes
+
+### 2026-06-09
+
+- Added a **Screenshots** drop-box on the All Links tab: drag any folder onto it to choose where `Prt Sc` captures are saved (defaults to `Pictures\Screens`)
+- The chosen folder is persisted in `ProgramManagerLayout.xml` and restored on launch; a **Use Default Folder** button reverts it, and a missing saved folder falls back to the default
+- Only folders are accepted on the drop-box; dropping a file is ignored with a brief prompt
 
 ### 2026-06-08
 

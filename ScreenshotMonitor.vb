@@ -51,9 +51,31 @@ Public Class ScreenshotMonitor
     Private _hookId As IntPtr = IntPtr.Zero
     Private _disposed As Boolean = False
 
-    ' Destination: <Pictures>\Screens
-    Private ReadOnly _saveFolder As String =
+    ' Default destination: <Pictures>\Screens. Form1 can override this with a
+    ' user-chosen folder (a grid shortcut to a folder named "Screens").
+    Public Shared ReadOnly DefaultSaveFolder As String =
         IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Screens")
+
+    ' Where captures are written. Assigned on the UI thread, read on the capture
+    ' background thread; String reference assignment is atomic, so no lock needed.
+    Private _saveFolder As String = DefaultSaveFolder
+
+    ''' <summary>
+    ''' Folder that screenshots are saved to. Falls back to the default
+    ''' (<Pictures>\Screens) when set to a blank or non-existent path.
+    ''' </summary>
+    Public Property SaveFolder As String
+        Get
+            Return _saveFolder
+        End Get
+        Set(value As String)
+            If String.IsNullOrWhiteSpace(value) Then
+                _saveFolder = DefaultSaveFolder
+            Else
+                _saveFolder = value
+            End If
+        End Set
+    End Property
 
     ''' <summary>Raised on a background thread after a screenshot is saved.</summary>
     Public Event ScreenshotSaved As EventHandler
@@ -103,7 +125,9 @@ Public Class ScreenshotMonitor
 
     Private Sub CaptureAndSave()
         Try
-            IO.Directory.CreateDirectory(_saveFolder)
+            ' Snapshot the target once so it can't change mid-capture.
+            Dim folder As String = _saveFolder
+            IO.Directory.CreateDirectory(folder)
 
             ' Capture the entire virtual desktop (all monitors).
             Dim bounds As Rectangle = SystemInformation.VirtualScreen
@@ -111,7 +135,7 @@ Public Class ScreenshotMonitor
                 Using g As Graphics = Graphics.FromImage(bmp)
                     g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size)
                 End Using
-                bmp.Save(BuildUniquePath(), ImageFormat.Jpeg)
+                bmp.Save(BuildUniquePath(folder), ImageFormat.Jpeg)
             End Using
 
             RaiseEvent ScreenshotSaved(Me, EventArgs.Empty)
@@ -121,16 +145,16 @@ Public Class ScreenshotMonitor
     End Sub
 
     ''' <summary>
-    ''' Returns Screens\screens_yyyy-MM-dd_HH-mm-ss.jpg, appending a counter if a
+    ''' Returns folder\screens_yyyy-MM-dd_HH-mm-ss.jpg, appending a counter if a
     ''' file with that timestamp already exists (two captures within one second).
     ''' </summary>
-    Private Function BuildUniquePath() As String
+    Private Function BuildUniquePath(folder As String) As String
         Dim stamp As String = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")
-        Dim path As String = IO.Path.Combine(_saveFolder, $"screens_{stamp}.jpg")
+        Dim path As String = IO.Path.Combine(folder, $"screens_{stamp}.jpg")
 
         Dim counter As Integer = 2
         While IO.File.Exists(path)
-            path = IO.Path.Combine(_saveFolder, $"screens_{stamp}_{counter}.jpg")
+            path = IO.Path.Combine(folder, $"screens_{stamp}_{counter}.jpg")
             counter += 1
         End While
 

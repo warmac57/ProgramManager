@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-06-09
+
+### Added - User-Selectable Screenshot Folder
+- The **All Links** settings tab now has a **Screenshots** drop-box: drag any folder onto it to set where `Prt Sc` captures are saved.
+- A **Use Default Folder** button reverts the destination to the default `Pictures\Screens` location, which is also shown (marked "(default)") until a custom folder is chosen.
+- The chosen folder is saved to `ProgramManagerLayout.xml` (`screenshotFolder` attribute on `<Settings>`) and restored on launch; if the saved folder no longer exists, it silently falls back to the default.
+- Only folders are accepted — dropping a file shows a brief prompt and is ignored.
+
 ## 2026-06-08
 
 ### Added - Background Print Screen Capture

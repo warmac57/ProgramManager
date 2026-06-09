@@ -60,22 +60,25 @@ Partial Class Form1
         txtTabName2 = New TextBox()
         txtTabName3 = New TextBox()
         txtTabName4 = New TextBox()
-        lblTabName5 = New Label()
-        lblTabName6 = New Label()
-        lblTabName7 = New Label()
-        lblTabName8 = New Label()
-        txtTabName5 = New TextBox()
-        txtTabName6 = New TextBox()
-        txtTabName7 = New TextBox()
-        txtTabName8 = New TextBox()
-        lblTabName9 = New Label()
-        txtTabName9 = New TextBox()
         lblTabName10 = New Label()
         txtTabName10 = New TextBox()
         btnApply = New Button()
-        lblSeparator = New Label()
+        lblTabName5 = New Label()
+        txtTabName5 = New TextBox()
+        lblTabName6 = New Label()
+        lblTabName7 = New Label()
+        lblTabName8 = New Label()
+        lblTabName9 = New Label()
+        txtTabName6 = New TextBox()
+        txtTabName7 = New TextBox()
+        txtTabName8 = New TextBox()
+        txtTabName9 = New TextBox()
         lblTheme = New Label()
         btnDarkModeToggle = New Button()
+        btnResetScreenshotFolder = New Button()
+        Label2 = New Label()
+        txtScreenshotFolder = New TextBox()
+        Label1 = New Label()
         TabControl1.SuspendLayout()
         TabPage1.SuspendLayout()
         TabPage2.SuspendLayout()
@@ -112,7 +115,7 @@ Partial Class Form1
         TabControl1.Location = New Point(0, 0)
         TabControl1.Name = "TabControl1"
         TabControl1.SelectedIndex = 0
-        TabControl1.Size = New Size(562, 446)
+        TabControl1.Size = New Size(672, 532)
         TabControl1.TabIndex = 0
         ' 
         ' TabPage1
@@ -120,8 +123,8 @@ Partial Class Form1
         TabPage1.Controls.Add(GridPanel1)
         TabPage1.Location = New Point(4, 34)
         TabPage1.Name = "TabPage1"
-        TabPage1.Padding = New Padding(3, 3, 3, 3)
-        TabPage1.Size = New Size(554, 408)
+        TabPage1.Padding = New Padding(3)
+        TabPage1.Size = New Size(664, 494)
         TabPage1.TabIndex = 0
         TabPage1.Text = "Tab 1"
         TabPage1.UseVisualStyleBackColor = True
@@ -141,7 +144,7 @@ Partial Class Form1
         GridPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel1.Size = New Size(548, 402)
+        GridPanel1.Size = New Size(658, 488)
         GridPanel1.TabIndex = 0
         ' 
         ' TabPage2
@@ -149,8 +152,8 @@ Partial Class Form1
         TabPage2.Controls.Add(GridPanel2)
         TabPage2.Location = New Point(4, 34)
         TabPage2.Name = "TabPage2"
-        TabPage2.Padding = New Padding(3, 3, 3, 3)
-        TabPage2.Size = New Size(554, 408)
+        TabPage2.Padding = New Padding(3)
+        TabPage2.Size = New Size(664, 494)
         TabPage2.TabIndex = 1
         TabPage2.Text = "Tab 2"
         TabPage2.UseVisualStyleBackColor = True
@@ -170,7 +173,7 @@ Partial Class Form1
         GridPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel2.Size = New Size(548, 402)
+        GridPanel2.Size = New Size(658, 488)
         GridPanel2.TabIndex = 0
         ' 
         ' TabPage3
@@ -178,8 +181,8 @@ Partial Class Form1
         TabPage3.Controls.Add(GridPanel3)
         TabPage3.Location = New Point(4, 34)
         TabPage3.Name = "TabPage3"
-        TabPage3.Padding = New Padding(3, 3, 3, 3)
-        TabPage3.Size = New Size(554, 408)
+        TabPage3.Padding = New Padding(3)
+        TabPage3.Size = New Size(664, 494)
         TabPage3.TabIndex = 2
         TabPage3.Text = "Tab 3"
         TabPage3.UseVisualStyleBackColor = True
@@ -199,7 +202,7 @@ Partial Class Form1
         GridPanel3.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel3.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel3.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel3.Size = New Size(548, 402)
+        GridPanel3.Size = New Size(658, 488)
         GridPanel3.TabIndex = 0
         ' 
         ' TabPage4
@@ -207,8 +210,8 @@ Partial Class Form1
         TabPage4.Controls.Add(GridPanel4)
         TabPage4.Location = New Point(4, 34)
         TabPage4.Name = "TabPage4"
-        TabPage4.Padding = New Padding(3, 3, 3, 3)
-        TabPage4.Size = New Size(554, 408)
+        TabPage4.Padding = New Padding(3)
+        TabPage4.Size = New Size(664, 494)
         TabPage4.TabIndex = 3
         TabPage4.Text = "Tab 4"
         TabPage4.UseVisualStyleBackColor = True
@@ -228,7 +231,7 @@ Partial Class Form1
         GridPanel4.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel4.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel4.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel4.Size = New Size(548, 402)
+        GridPanel4.Size = New Size(658, 488)
         GridPanel4.TabIndex = 0
         ' 
         ' TabPage5
@@ -236,8 +239,8 @@ Partial Class Form1
         TabPage5.Controls.Add(GridPanel5)
         TabPage5.Location = New Point(4, 34)
         TabPage5.Name = "TabPage5"
-        TabPage5.Padding = New Padding(3, 3, 3, 3)
-        TabPage5.Size = New Size(554, 408)
+        TabPage5.Padding = New Padding(3)
+        TabPage5.Size = New Size(664, 494)
         TabPage5.TabIndex = 4
         TabPage5.Text = "Tab 5"
         TabPage5.UseVisualStyleBackColor = True
@@ -257,7 +260,7 @@ Partial Class Form1
         GridPanel5.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel5.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel5.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel5.Size = New Size(548, 402)
+        GridPanel5.Size = New Size(658, 488)
         GridPanel5.TabIndex = 0
         ' 
         ' TabPage6
@@ -265,8 +268,8 @@ Partial Class Form1
         TabPage6.Controls.Add(GridPanel6)
         TabPage6.Location = New Point(4, 34)
         TabPage6.Name = "TabPage6"
-        TabPage6.Padding = New Padding(3, 3, 3, 3)
-        TabPage6.Size = New Size(554, 408)
+        TabPage6.Padding = New Padding(3)
+        TabPage6.Size = New Size(664, 494)
         TabPage6.TabIndex = 5
         TabPage6.Text = "Tab 6"
         TabPage6.UseVisualStyleBackColor = True
@@ -286,7 +289,7 @@ Partial Class Form1
         GridPanel6.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel6.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel6.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel6.Size = New Size(548, 402)
+        GridPanel6.Size = New Size(658, 488)
         GridPanel6.TabIndex = 0
         ' 
         ' TabPage7
@@ -294,8 +297,8 @@ Partial Class Form1
         TabPage7.Controls.Add(GridPanel7)
         TabPage7.Location = New Point(4, 34)
         TabPage7.Name = "TabPage7"
-        TabPage7.Padding = New Padding(3, 3, 3, 3)
-        TabPage7.Size = New Size(554, 408)
+        TabPage7.Padding = New Padding(3)
+        TabPage7.Size = New Size(664, 494)
         TabPage7.TabIndex = 6
         TabPage7.Text = "Tab 7"
         TabPage7.UseVisualStyleBackColor = True
@@ -315,7 +318,7 @@ Partial Class Form1
         GridPanel7.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel7.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel7.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel7.Size = New Size(548, 402)
+        GridPanel7.Size = New Size(658, 488)
         GridPanel7.TabIndex = 0
         ' 
         ' TabPage8
@@ -323,8 +326,8 @@ Partial Class Form1
         TabPage8.Controls.Add(GridPanel8)
         TabPage8.Location = New Point(4, 34)
         TabPage8.Name = "TabPage8"
-        TabPage8.Padding = New Padding(3, 3, 3, 3)
-        TabPage8.Size = New Size(554, 408)
+        TabPage8.Padding = New Padding(3)
+        TabPage8.Size = New Size(664, 494)
         TabPage8.TabIndex = 7
         TabPage8.Text = "Tab 8"
         TabPage8.UseVisualStyleBackColor = True
@@ -344,7 +347,7 @@ Partial Class Form1
         GridPanel8.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel8.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel8.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel8.Size = New Size(548, 402)
+        GridPanel8.Size = New Size(658, 488)
         GridPanel8.TabIndex = 0
         ' 
         ' TabPage10
@@ -352,8 +355,8 @@ Partial Class Form1
         TabPage10.Controls.Add(GridPanel9)
         TabPage10.Location = New Point(4, 34)
         TabPage10.Name = "TabPage10"
-        TabPage10.Padding = New Padding(3, 3, 3, 3)
-        TabPage10.Size = New Size(554, 408)
+        TabPage10.Padding = New Padding(3)
+        TabPage10.Size = New Size(664, 494)
         TabPage10.TabIndex = 8
         TabPage10.Text = "eMails"
         TabPage10.UseVisualStyleBackColor = True
@@ -373,7 +376,7 @@ Partial Class Form1
         GridPanel9.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel9.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel9.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel9.Size = New Size(548, 402)
+        GridPanel9.Size = New Size(658, 488)
         GridPanel9.TabIndex = 0
         ' 
         ' TabPage11
@@ -381,8 +384,8 @@ Partial Class Form1
         TabPage11.Controls.Add(GridPanel10)
         TabPage11.Location = New Point(4, 34)
         TabPage11.Name = "TabPage11"
-        TabPage11.Padding = New Padding(3, 3, 3, 3)
-        TabPage11.Size = New Size(554, 408)
+        TabPage11.Padding = New Padding(3)
+        TabPage11.Size = New Size(664, 494)
         TabPage11.TabIndex = 9
         TabPage11.Text = "Tab 10"
         TabPage11.UseVisualStyleBackColor = True
@@ -402,7 +405,7 @@ Partial Class Form1
         GridPanel10.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel10.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         GridPanel10.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        GridPanel10.Size = New Size(548, 402)
+        GridPanel10.Size = New Size(658, 488)
         GridPanel10.TabIndex = 0
         ' 
         ' TabPage9
@@ -410,8 +413,8 @@ Partial Class Form1
         TabPage9.Controls.Add(Tab5MainPanel)
         TabPage9.Location = New Point(4, 34)
         TabPage9.Name = "TabPage9"
-        TabPage9.Padding = New Padding(3, 3, 3, 3)
-        TabPage9.Size = New Size(554, 408)
+        TabPage9.Padding = New Padding(3)
+        TabPage9.Size = New Size(664, 494)
         TabPage9.TabIndex = 10
         TabPage9.Text = "All Links"
         TabPage9.UseVisualStyleBackColor = True
@@ -424,7 +427,7 @@ Partial Class Form1
         Tab5MainPanel.Dock = DockStyle.Fill
         Tab5MainPanel.Location = New Point(3, 3)
         Tab5MainPanel.Name = "Tab5MainPanel"
-        Tab5MainPanel.Size = New Size(548, 402)
+        Tab5MainPanel.Size = New Size(658, 488)
         Tab5MainPanel.TabIndex = 0
         ' 
         ' lvwAllLinks
@@ -433,9 +436,9 @@ Partial Class Form1
         lvwAllLinks.Dock = DockStyle.Fill
         lvwAllLinks.FullRowSelect = True
         lvwAllLinks.GridLines = True
-        lvwAllLinks.Location = New Point(0, 250)
+        lvwAllLinks.Location = New Point(0, 247)
         lvwAllLinks.Name = "lvwAllLinks"
-        lvwAllLinks.Size = New Size(548, 152)
+        lvwAllLinks.Size = New Size(658, 241)
         lvwAllLinks.TabIndex = 0
         lvwAllLinks.UseCompatibleStateImageBehavior = False
         lvwAllLinks.View = View.Details
@@ -466,8 +469,8 @@ Partial Class Form1
         Tab5SettingsPanel.Dock = DockStyle.Top
         Tab5SettingsPanel.Location = New Point(0, 0)
         Tab5SettingsPanel.Name = "Tab5SettingsPanel"
-        Tab5SettingsPanel.Padding = New Padding(10, 10, 10, 10)
-        Tab5SettingsPanel.Size = New Size(548, 250)
+        Tab5SettingsPanel.Padding = New Padding(10)
+        Tab5SettingsPanel.Size = New Size(658, 247)
         Tab5SettingsPanel.TabIndex = 1
         ' 
         ' Tab5SettingsTable
@@ -488,9 +491,6 @@ Partial Class Form1
         Tab5SettingsTable.Controls.Add(lblTabName10, 2, 4)
         Tab5SettingsTable.Controls.Add(txtTabName10, 3, 4)
         Tab5SettingsTable.Controls.Add(btnApply, 1, 5)
-        Tab5SettingsTable.Controls.Add(lblSeparator, 0, 6)
-        Tab5SettingsTable.Controls.Add(lblTheme, 0, 7)
-        Tab5SettingsTable.Controls.Add(btnDarkModeToggle, 1, 7)
         Tab5SettingsTable.Controls.Add(lblTabName5, 0, 4)
         Tab5SettingsTable.Controls.Add(txtTabName5, 1, 4)
         Tab5SettingsTable.Controls.Add(lblTabName6, 2, 0)
@@ -501,6 +501,12 @@ Partial Class Form1
         Tab5SettingsTable.Controls.Add(txtTabName7, 3, 1)
         Tab5SettingsTable.Controls.Add(txtTabName8, 3, 2)
         Tab5SettingsTable.Controls.Add(txtTabName9, 3, 3)
+        Tab5SettingsTable.Controls.Add(lblTheme, 0, 6)
+        Tab5SettingsTable.Controls.Add(btnDarkModeToggle, 1, 6)
+        Tab5SettingsTable.Controls.Add(btnResetScreenshotFolder, 2, 7)
+        Tab5SettingsTable.Controls.Add(Label2, 0, 7)
+        Tab5SettingsTable.Controls.Add(txtScreenshotFolder, 1, 7)
+        Tab5SettingsTable.Controls.Add(Label1, 3, 7)
         Tab5SettingsTable.Dock = DockStyle.Fill
         Tab5SettingsTable.Location = New Point(10, 10)
         Tab5SettingsTable.Name = "Tab5SettingsTable"
@@ -513,7 +519,8 @@ Partial Class Form1
         Tab5SettingsTable.RowStyles.Add(New RowStyle(SizeType.Absolute, 28F))
         Tab5SettingsTable.RowStyles.Add(New RowStyle(SizeType.Absolute, 28F))
         Tab5SettingsTable.RowStyles.Add(New RowStyle(SizeType.Absolute, 28F))
-        Tab5SettingsTable.Size = New Size(528, 230)
+        Tab5SettingsTable.RowStyles.Add(New RowStyle(SizeType.Absolute, 20F))
+        Tab5SettingsTable.Size = New Size(638, 227)
         Tab5SettingsTable.TabIndex = 0
         ' 
         ' lblTabName1
@@ -562,7 +569,7 @@ Partial Class Form1
         txtTabName1.Location = New Point(82, 2)
         txtTabName1.Margin = New Padding(3, 2, 3, 2)
         txtTabName1.Name = "txtTabName1"
-        txtTabName1.Size = New Size(176, 23)
+        txtTabName1.Size = New Size(231, 23)
         txtTabName1.TabIndex = 4
         txtTabName1.Text = "Tab 1"
         ' 
@@ -572,7 +579,7 @@ Partial Class Form1
         txtTabName2.Location = New Point(82, 30)
         txtTabName2.Margin = New Padding(3, 2, 3, 2)
         txtTabName2.Name = "txtTabName2"
-        txtTabName2.Size = New Size(176, 23)
+        txtTabName2.Size = New Size(231, 23)
         txtTabName2.TabIndex = 5
         txtTabName2.Text = "Tab 2"
         ' 
@@ -582,7 +589,7 @@ Partial Class Form1
         txtTabName3.Location = New Point(82, 58)
         txtTabName3.Margin = New Padding(3, 2, 3, 2)
         txtTabName3.Name = "txtTabName3"
-        txtTabName3.Size = New Size(176, 23)
+        txtTabName3.Size = New Size(231, 23)
         txtTabName3.TabIndex = 6
         txtTabName3.Text = "Tab 3"
         ' 
@@ -592,114 +599,14 @@ Partial Class Form1
         txtTabName4.Location = New Point(82, 86)
         txtTabName4.Margin = New Padding(3, 2, 3, 2)
         txtTabName4.Name = "txtTabName4"
-        txtTabName4.Size = New Size(176, 23)
+        txtTabName4.Size = New Size(231, 23)
         txtTabName4.TabIndex = 7
         txtTabName4.Text = "Tab 4"
-        ' 
-        ' lblTabName5
-        ' 
-        lblTabName5.AutoSize = True
-        lblTabName5.Location = New Point(3, 117)
-        lblTabName5.Margin = New Padding(3, 5, 3, 0)
-        lblTabName5.Name = "lblTabName5"
-        lblTabName5.Size = New Size(73, 15)
-        lblTabName5.TabIndex = 12
-        lblTabName5.Text = "Tab 5 Name:"
-        ' 
-        ' lblTabName6
-        ' 
-        lblTabName6.AutoSize = True
-        lblTabName6.Location = New Point(264, 5)
-        lblTabName6.Margin = New Padding(3, 5, 3, 0)
-        lblTabName6.Name = "lblTabName6"
-        lblTabName6.Size = New Size(73, 15)
-        lblTabName6.TabIndex = 13
-        lblTabName6.Text = "Tab 6 Name:"
-        ' 
-        ' lblTabName7
-        ' 
-        lblTabName7.AutoSize = True
-        lblTabName7.Location = New Point(264, 33)
-        lblTabName7.Margin = New Padding(3, 5, 3, 0)
-        lblTabName7.Name = "lblTabName7"
-        lblTabName7.Size = New Size(73, 15)
-        lblTabName7.TabIndex = 14
-        lblTabName7.Text = "Tab 7 Name:"
-        ' 
-        ' lblTabName8
-        ' 
-        lblTabName8.AutoSize = True
-        lblTabName8.Location = New Point(264, 61)
-        lblTabName8.Margin = New Padding(3, 5, 3, 0)
-        lblTabName8.Name = "lblTabName8"
-        lblTabName8.Size = New Size(73, 15)
-        lblTabName8.TabIndex = 15
-        lblTabName8.Text = "Tab 8 Name:"
-        ' 
-        ' txtTabName5
-        ' 
-        txtTabName5.Dock = DockStyle.Fill
-        txtTabName5.Location = New Point(82, 114)
-        txtTabName5.Margin = New Padding(3, 2, 3, 2)
-        txtTabName5.Name = "txtTabName5"
-        txtTabName5.Size = New Size(176, 23)
-        txtTabName5.TabIndex = 16
-        txtTabName5.Text = "Tab 5"
-        ' 
-        ' txtTabName6
-        ' 
-        txtTabName6.Dock = DockStyle.Fill
-        txtTabName6.Location = New Point(349, 2)
-        txtTabName6.Margin = New Padding(3, 2, 3, 2)
-        txtTabName6.Name = "txtTabName6"
-        txtTabName6.Size = New Size(176, 23)
-        txtTabName6.TabIndex = 17
-        txtTabName6.Text = "Tab 6"
-        ' 
-        ' txtTabName7
-        ' 
-        txtTabName7.Dock = DockStyle.Fill
-        txtTabName7.Location = New Point(349, 30)
-        txtTabName7.Margin = New Padding(3, 2, 3, 2)
-        txtTabName7.Name = "txtTabName7"
-        txtTabName7.Size = New Size(176, 23)
-        txtTabName7.TabIndex = 18
-        txtTabName7.Text = "Tab 7"
-        ' 
-        ' txtTabName8
-        ' 
-        txtTabName8.Dock = DockStyle.Fill
-        txtTabName8.Location = New Point(349, 58)
-        txtTabName8.Margin = New Padding(3, 2, 3, 2)
-        txtTabName8.Name = "txtTabName8"
-        txtTabName8.Size = New Size(176, 23)
-        txtTabName8.TabIndex = 19
-        txtTabName8.Text = "Tab 8"
-        ' 
-        ' lblTabName9
-        ' 
-        lblTabName9.AutoSize = True
-        lblTabName9.Location = New Point(264, 89)
-        lblTabName9.Margin = New Padding(3, 5, 3, 0)
-        lblTabName9.Name = "lblTabName9"
-        lblTabName9.Size = New Size(73, 15)
-        lblTabName9.TabIndex = 20
-        lblTabName9.Text = "Tab 9 Name:"
-        ' 
-        ' txtTabName9
-        ' 
-        txtTabName9.Dock = DockStyle.Fill
-        txtTabName9.Location = New Point(349, 86)
-        txtTabName9.Margin = New Padding(3, 2, 3, 2)
-        txtTabName9.Name = "txtTabName9"
-        txtTabName9.Size = New Size(176, 23)
-        txtTabName9.TabIndex = 21
-        txtTabName9.Text = "Tab 9"
         ' 
         ' lblTabName10
         ' 
         lblTabName10.AutoSize = True
-        lblTabName10.Location = New Point(264, 117)
+        lblTabName10.Location = New Point(319, 117)
         lblTabName10.Margin = New Padding(3, 5, 3, 0)
         lblTabName10.Name = "lblTabName10"
         lblTabName10.Size = New Size(79, 15)
@@ -709,10 +616,10 @@ Partial Class Form1
         ' txtTabName10
         ' 
         txtTabName10.Dock = DockStyle.Fill
-        txtTabName10.Location = New Point(349, 114)
+        txtTabName10.Location = New Point(404, 114)
         txtTabName10.Margin = New Padding(3, 2, 3, 2)
         txtTabName10.Name = "txtTabName10"
-        txtTabName10.Size = New Size(176, 23)
+        txtTabName10.Size = New Size(231, 23)
         txtTabName10.TabIndex = 23
         txtTabName10.Text = "Tab 10"
         ' 
@@ -727,20 +634,110 @@ Partial Class Form1
         btnApply.Text = "Apply"
         btnApply.UseVisualStyleBackColor = True
         ' 
-        ' lblSeparator
+        ' lblTabName5
         ' 
-        lblSeparator.BorderStyle = BorderStyle.FixedSingle
-        Tab5SettingsTable.SetColumnSpan(lblSeparator, 4)
-        lblSeparator.Dock = DockStyle.Fill
-        lblSeparator.Location = New Point(3, 168)
-        lblSeparator.Name = "lblSeparator"
-        lblSeparator.Size = New Size(522, 28)
-        lblSeparator.TabIndex = 9
+        lblTabName5.AutoSize = True
+        lblTabName5.Location = New Point(3, 117)
+        lblTabName5.Margin = New Padding(3, 5, 3, 0)
+        lblTabName5.Name = "lblTabName5"
+        lblTabName5.Size = New Size(73, 15)
+        lblTabName5.TabIndex = 12
+        lblTabName5.Text = "Tab 5 Name:"
+        ' 
+        ' txtTabName5
+        ' 
+        txtTabName5.Dock = DockStyle.Fill
+        txtTabName5.Location = New Point(82, 114)
+        txtTabName5.Margin = New Padding(3, 2, 3, 2)
+        txtTabName5.Name = "txtTabName5"
+        txtTabName5.Size = New Size(231, 23)
+        txtTabName5.TabIndex = 16
+        txtTabName5.Text = "Tab 5"
+        ' 
+        ' lblTabName6
+        ' 
+        lblTabName6.AutoSize = True
+        lblTabName6.Location = New Point(319, 5)
+        lblTabName6.Margin = New Padding(3, 5, 3, 0)
+        lblTabName6.Name = "lblTabName6"
+        lblTabName6.Size = New Size(73, 15)
+        lblTabName6.TabIndex = 13
+        lblTabName6.Text = "Tab 6 Name:"
+        ' 
+        ' lblTabName7
+        ' 
+        lblTabName7.AutoSize = True
+        lblTabName7.Location = New Point(319, 33)
+        lblTabName7.Margin = New Padding(3, 5, 3, 0)
+        lblTabName7.Name = "lblTabName7"
+        lblTabName7.Size = New Size(73, 15)
+        lblTabName7.TabIndex = 14
+        lblTabName7.Text = "Tab 7 Name:"
+        ' 
+        ' lblTabName8
+        ' 
+        lblTabName8.AutoSize = True
+        lblTabName8.Location = New Point(319, 61)
+        lblTabName8.Margin = New Padding(3, 5, 3, 0)
+        lblTabName8.Name = "lblTabName8"
+        lblTabName8.Size = New Size(73, 15)
+        lblTabName8.TabIndex = 15
+        lblTabName8.Text = "Tab 8 Name:"
+        ' 
+        ' lblTabName9
+        ' 
+        lblTabName9.AutoSize = True
+        lblTabName9.Location = New Point(319, 89)
+        lblTabName9.Margin = New Padding(3, 5, 3, 0)
+        lblTabName9.Name = "lblTabName9"
+        lblTabName9.Size = New Size(73, 15)
+        lblTabName9.TabIndex = 20
+        lblTabName9.Text = "Tab 9 Name:"
+        ' 
+        ' txtTabName6
+        ' 
+        txtTabName6.Dock = DockStyle.Fill
+        txtTabName6.Location = New Point(404, 2)
+        txtTabName6.Margin = New Padding(3, 2, 3, 2)
+        txtTabName6.Name = "txtTabName6"
+        txtTabName6.Size = New Size(231, 23)
+        txtTabName6.TabIndex = 17
+        txtTabName6.Text = "Tab 6"
+        ' 
+        ' txtTabName7
+        ' 
+        txtTabName7.Dock = DockStyle.Fill
+        txtTabName7.Location = New Point(404, 30)
+        txtTabName7.Margin = New Padding(3, 2, 3, 2)
+        txtTabName7.Name = "txtTabName7"
+        txtTabName7.Size = New Size(231, 23)
+        txtTabName7.TabIndex = 18
+        txtTabName7.Text = "Tab 7"
+        ' 
+        ' txtTabName8
+        ' 
+        txtTabName8.Dock = DockStyle.Fill
+        txtTabName8.Location = New Point(404, 58)
+        txtTabName8.Margin = New Padding(3, 2, 3, 2)
+        txtTabName8.Name = "txtTabName8"
+        txtTabName8.Size = New Size(231, 23)
+        txtTabName8.TabIndex = 19
+        txtTabName8.Text = "Tab 8"
+        ' 
+        ' txtTabName9
+        ' 
+        txtTabName9.Dock = DockStyle.Fill
+        txtTabName9.Location = New Point(404, 86)
+        txtTabName9.Margin = New Padding(3, 2, 3, 2)
+        txtTabName9.Name = "txtTabName9"
+        txtTabName9.Size = New Size(231, 23)
+        txtTabName9.TabIndex = 21
+        txtTabName9.Text = "Tab 9"
         ' 
         ' lblTheme
         ' 
         lblTheme.AutoSize = True
-        lblTheme.Location = New Point(3, 201)
+        lblTheme.Location = New Point(3, 173)
         lblTheme.Margin = New Padding(3, 5, 3, 0)
         lblTheme.Name = "lblTheme"
         lblTheme.Size = New Size(47, 15)
@@ -750,20 +747,64 @@ Partial Class Form1
         ' btnDarkModeToggle
         ' 
         btnDarkModeToggle.AutoSize = True
-        btnDarkModeToggle.Location = New Point(82, 198)
+        btnDarkModeToggle.Location = New Point(82, 170)
         btnDarkModeToggle.Margin = New Padding(3, 2, 3, 2)
         btnDarkModeToggle.Name = "btnDarkModeToggle"
-        btnDarkModeToggle.Size = New Size(174, 25)
+        btnDarkModeToggle.Size = New Size(127, 24)
         btnDarkModeToggle.TabIndex = 11
         btnDarkModeToggle.Text = "Switch to Dark Mode"
         btnDarkModeToggle.UseVisualStyleBackColor = True
+        ' 
+        ' btnResetScreenshotFolder
+        ' 
+        btnResetScreenshotFolder.Anchor = AnchorStyles.None
+        btnResetScreenshotFolder.AutoSize = True
+        btnResetScreenshotFolder.Location = New Point(322, 199)
+        btnResetScreenshotFolder.Margin = New Padding(3, 2, 3, 2)
+        btnResetScreenshotFolder.Name = "btnResetScreenshotFolder"
+        btnResetScreenshotFolder.Size = New Size(73, 25)
+        btnResetScreenshotFolder.TabIndex = 26
+        btnResetScreenshotFolder.Text = "Default"
+        btnResetScreenshotFolder.UseVisualStyleBackColor = True
+        ' 
+        ' Label2
+        ' 
+        Label2.AutoSize = True
+        Label2.Location = New Point(3, 201)
+        Label2.Margin = New Padding(3, 5, 3, 0)
+        Label2.Name = "Label2"
+        Label2.Size = New Size(73, 15)
+        Label2.TabIndex = 28
+        Label2.Text = "Screenshots:"
+        ' 
+        ' txtScreenshotFolder
+        ' 
+        txtScreenshotFolder.AllowDrop = True
+        txtScreenshotFolder.Dock = DockStyle.Fill
+        txtScreenshotFolder.Location = New Point(82, 198)
+        txtScreenshotFolder.Margin = New Padding(3, 2, 3, 2)
+        txtScreenshotFolder.Name = "txtScreenshotFolder"
+        txtScreenshotFolder.ReadOnly = True
+        txtScreenshotFolder.Size = New Size(231, 23)
+        txtScreenshotFolder.TabIndex = 25
+        ' 
+        ' Label1
+        ' 
+        Label1.AutoSize = True
+        Label1.Dock = DockStyle.Fill
+        Label1.Location = New Point(404, 196)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(231, 31)
+        Label1.TabIndex = 27
+        Label1.Text = "<-Drag folder to set path, or use Default"
+        Label1.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Form1
         ' 
         AllowDrop = True
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(562, 446)
+        ClientSize = New Size(672, 532)
         Controls.Add(TabControl1)
         FormBorderStyle = FormBorderStyle.SizableToolWindow
         MinimumSize = New Size(398, 293)
@@ -842,6 +883,9 @@ Partial Class Form1
     Friend WithEvents colName As ColumnHeader
     Friend WithEvents colPath As ColumnHeader
     Friend WithEvents colNote As ColumnHeader
-    Friend WithEvents lblSeparator As Label
+    Friend WithEvents txtScreenshotFolder As TextBox
+    Friend WithEvents btnResetScreenshotFolder As Button
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Label2 As Label
 
 End Class

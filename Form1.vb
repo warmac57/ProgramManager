@@ -75,8 +75,13 @@ Public Class Form1
     ' --- Theme state ---
     Private isDarkMode As Boolean = False
 
-    ' --- Screenshot monitor: saves Prt Sc captures to Pictures\Screens while the app runs ---
+    ' --- Screenshot monitor: saves Prt Sc captures while the app runs ---
+    ' Captures land in Pictures\Screens by default, or in a folder the user chooses
+    ' via the drop-box on the All Links tab (persisted in the layout XML).
     Private ReadOnly screenshotMonitor As New ScreenshotMonitor()
+
+    ' The user's chosen screenshot folder, or Nothing to use the default.
+    Private screenshotFolderOverride As String = Nothing
 
     ' Timer that restores the title bar color after the green "saved" flash.
     Private titleFlashTimer As Timer
@@ -137,6 +142,12 @@ Public Class Form1
         AddHandler btnDarkModeToggle.Click, AddressOf DarkModeToggle_Click
         AddHandler lvwAllLinks.DoubleClick, AddressOf AllLinksListView_DoubleClick
 
+        ' Wire up the screenshot-folder drop-box and its reset button.
+        AddHandler txtScreenshotFolder.DragEnter, AddressOf ScreenshotFolder_DragEnter
+        AddHandler txtScreenshotFolder.DragDrop, AddressOf ScreenshotFolder_DragDrop
+        AddHandler btnResetScreenshotFolder.Click, AddressOf ResetScreenshotFolder_Click
+        RefreshScreenshotFolderDisplay()
+
         ' Wire up tab drawing and tab change.
         AddHandler TabControl1.DrawItem, AddressOf TabControl1_DrawItem
         AddHandler TabControl1.SelectedIndexChanged, AddressOf TabControl1_SelectedIndexChanged
@@ -147,6 +158,66 @@ Public Class Form1
         ' Start watching for the Prt Sc key for the lifetime of the app.
         AddHandler screenshotMonitor.ScreenshotSaved, AddressOf OnScreenshotSaved
         screenshotMonitor.StartMonitoring()
+    End Sub
+
+    ''' <summary>
+    ''' Applies the given folder as the screenshot save location (Nothing/blank or a
+    ''' non-existent path falls back to the default Pictures\Screens) and refreshes
+    ''' the drop-box display on the All Links tab.
+    ''' </summary>
+    Private Sub SetScreenshotFolder(folder As String)
+        If String.IsNullOrWhiteSpace(folder) OrElse Not IO.Directory.Exists(folder) Then
+            screenshotFolderOverride = Nothing
+        Else
+            screenshotFolderOverride = folder
+        End If
+
+        screenshotMonitor.SaveFolder = screenshotFolderOverride
+        RefreshScreenshotFolderDisplay()
+    End Sub
+
+    ''' <summary>Shows the active screenshot folder, flagging the default case.</summary>
+    Private Sub RefreshScreenshotFolderDisplay()
+        If screenshotFolderOverride Is Nothing Then
+            txtScreenshotFolder.Text = ScreenshotMonitor.DefaultSaveFolder & "  (default)"
+        Else
+            txtScreenshotFolder.Text = screenshotFolderOverride
+        End If
+    End Sub
+
+    ' --- Screenshot folder drop-box (All Links tab) ---
+
+    Private Sub ScreenshotFolder_DragEnter(sender As Object, e As DragEventArgs)
+        ' Accept a single folder drop only.
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            Dim paths As String() = CType(e.Data.GetData(DataFormats.FileDrop), String())
+            If paths IsNot Nothing AndAlso paths.Length > 0 AndAlso IO.Directory.Exists(paths(0)) Then
+                e.Effect = DragDropEffects.Copy
+                Return
+            End If
+        End If
+        e.Effect = DragDropEffects.None
+    End Sub
+
+    Private Sub ScreenshotFolder_DragDrop(sender As Object, e As DragEventArgs)
+        If Not e.Data.GetDataPresent(DataFormats.FileDrop) Then Return
+        Dim paths As String() = CType(e.Data.GetData(DataFormats.FileDrop), String())
+        If paths Is Nothing OrElse paths.Length = 0 Then Return
+
+        Dim folder As String = paths(0)
+        If Not IO.Directory.Exists(folder) Then
+            MessageBox.Show("Please drop a folder (not a file) to set the screenshot save location.",
+                            "Not a Folder", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+
+        SetScreenshotFolder(folder)
+        SaveLayout()
+    End Sub
+
+    Private Sub ResetScreenshotFolder_Click(sender As Object, e As EventArgs)
+        SetScreenshotFolder(Nothing)
+        SaveLayout()
     End Sub
 
     ' Flash the title bar green when a screenshot lands in the Screens folder.
@@ -1116,9 +1187,12 @@ Public Class Form1
             Dim root As XmlElement = doc.CreateElement("ProgramManagerLayout")
             doc.AppendChild(root)
 
-            ' Save theme preference.
+            ' Save theme preference and the chosen screenshot folder (if any).
             Dim settingsElement As XmlElement = doc.CreateElement("Settings")
             settingsElement.SetAttribute("darkMode", isDarkMode.ToString())
+            If Not String.IsNullOrEmpty(screenshotFolderOverride) Then
+                settingsElement.SetAttribute("screenshotFolder", screenshotFolderOverride)
+            End If
             root.AppendChild(settingsElement)
 
             Dim tabsElement As XmlElement = doc.CreateElement("Tabs")
@@ -1179,6 +1253,12 @@ Public Class Form1
                 If darkAttr IsNot Nothing Then
                     isDarkMode = Boolean.Parse(darkAttr.Value)
                     ApplyTheme()
+                End If
+
+                ' Restore the chosen screenshot folder; falls back to default if gone.
+                Dim folderAttr As XmlAttribute = settingsNode.Attributes("screenshotFolder")
+                If folderAttr IsNot Nothing Then
+                    SetScreenshotFolder(folderAttr.Value)
                 End If
             End If
 
