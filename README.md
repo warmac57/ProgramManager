@@ -5,19 +5,21 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 
 ## Features
 
-- **Tabbed grid layout** - 10 tabs with 4x4 grids (160 shortcut slots) plus an All Links management tab
+- **Tabbed grid layout** - As many tabs as you need, each a 4x4 grid (16 shortcut slots), plus an All Links management tab; the tab strip wraps onto extra rows when it gets full
 - **Drag and drop** - Drop files and folders from Explorer onto any grid cell
 - **Icon rearrangement** - Drag icons between cells to swap positions
 - **File and folder support** - Shortcuts to both files and folders with proper Windows icons
 - **Launch on double-click** - Open any shortcut directly from the grid or the All Links list
 - **Icon notes** - Attach a free-text note to any shortcut via right-click; a green ✓ badge appears on the icon when a note exists; notes are saved to XML and visible in the All Links tab
-- **Tab renaming** - Customize all 10 tab names from the management tab with live preview
+- **Tab management** - Add, rename, reorder, and delete tabs from the All Links tab list or by right-clicking a tab header; deleting a tab moves its links to another tab (or deletes them after confirmation)
 - **Hide/unhide desktop folders** - Toggle the Windows Hidden attribute on desktop folders via right-click
 - **Dark / light mode** - Switch themes from the management tab; preference is persisted
 - **Print Screen capture** - While Program Manager is running, pressing `Prt Sc` saves a full-screen capture to `screens_<timestamp>.jpg`; the title bar briefly flashes green to confirm the save (Windows 11)
 - **Custom screenshot folder** - Captures save to `Pictures\Screens` by default, or drag a folder onto the **Screenshots** drop-box on the All Links tab to choose your own location; the choice is persisted and a **Use Default Folder** button reverts it
 - **Roll-up** - Double-click the title bar to collapse the window to just the title bar
-- **Automatic XML backups** - On every launch, both data files are backed up to a `BACKUP-XML` subfolder; the last 10 backups per file are retained
+- **Automatic XML backups** - On every launch, both data files are backed up to a `BACKUP-XML` subfolder; the last 10 backups per file are retained, plus a kept copy before every tab delete or restore
+- **Restore from backup** - Reload the whole layout from any backup on the All Links tab; the current layout is saved first so a restore can be undone
+- **Link editor** - Select a row on the All Links tab to change that link's tab, custom name, path (type, browse, or drop), and note; Save/Revert, Remove, Open Folder, and Launch work on the selected link
 - **Missing link detection** - Icons whose file or folder no longer exists are greyed out in place rather than silently removed; double-clicking shows a helpful message and the entry is preserved in XML until you choose to remove it
 - **Portable** - All settings stored next to the executable; copy the folder for independent instances
 
@@ -39,11 +41,11 @@ dotnet run
 
 ### Usage
 
-1. Drag files or folders from Windows Explorer onto any cell in Tabs 1-8 or the eMails tab.
+1. Drag files or folders from Windows Explorer onto any cell in a grid tab.
 2. Double-click an icon to launch it.
 3. Drag icons between cells to rearrange.
 4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove).
-5. Use the All Links tab to rename tabs, toggle dark mode, set the screenshot save folder, and view all shortcuts with their notes in a list.
+5. Use the All Links tab to edit any link (select its row), add, rename, reorder, and delete tabs, restore a backup, toggle dark mode, set the screenshot save folder, and view all shortcuts with their notes in a list. Tab commands are also on the right-click menu of each tab header.
 
 For detailed feature documentation, see [Help.md](Help.md).
 
@@ -53,7 +55,7 @@ All data is stored in the application directory (portable, no registry or AppDat
 
 | File | Contents |
 |---|---|
-| `ProgramManagerLayout.xml` | Shortcut positions, tab names, icon notes, dark mode preference, screenshot save folder |
+| `ProgramManagerLayout.xml` | Shortcut positions, tab names, icon notes, custom link names, dark mode preference, screenshot save folder |
 | `ProgramManagerSettings.xml` | Window size, position, and state |
 | `BACKUP-XML/` | Timestamped backups of both XML files (last 10 per file) |
 
@@ -64,6 +66,19 @@ All data is stored in the application directory (portable, no registry or AppDat
 Copy the entire application folder to a new location to run independent instances. Each copy maintains its own settings and shortcuts.
 
 ## Recent Changes
+
+### 2026-10-03
+
+- Tabs are no longer limited to 10: add, rename, reorder, and delete them from the new tab list on the All Links tab or the right-click menu on any tab header
+- Deleting a tab with links moves them to a tab you choose (default), or deletes them after a second confirmation; a copy of the layout is saved to `BACKUP-XML` first
+- The tab strip wraps onto a second row when the tabs don't fit
+- Added **Restore...** on the All Links tab (under the tab buttons)
+- New link editor under the All Links list: change the selected link's tab, custom name, path, and note, with Save/Revert, Remove, Open Folder, and Launch; unsaved changes are never lost silently
+- Links can have a custom display name (saved as a `name` attribute; blank uses the file name)
+- Removed the old fixed tab-name boxes and the Apply button (every change saves immediately)
+- Existing layout files load unchanged; a one-time `PreDynamicTabs-ProgramManagerLayout.xml` snapshot is kept in `BACKUP-XML`
+- Safer saving: a layout file that fails to load is never overwritten, and saves go through a temporary file
+- Main form renamed from `Form1` to `frmMain`
 
 ### 2026-06-09
 

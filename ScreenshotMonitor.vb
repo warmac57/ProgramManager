@@ -51,7 +51,7 @@ Public Class ScreenshotMonitor
     Private _hookId As IntPtr = IntPtr.Zero
     Private _disposed As Boolean = False
 
-    ' Default destination: <Pictures>\Screens. Form1 can override this with a
+    ' Default destination: <Pictures>\Screens. frmMain can override this with a
     ' user-chosen folder (a grid shortcut to a folder named "Screens").
     Public Shared ReadOnly DefaultSaveFolder As String =
         IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Screens")

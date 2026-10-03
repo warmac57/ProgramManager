@@ -1,5 +1,51 @@
 # Changelog
 
+## 2026-10-03 (Stage 3)
+
+### Added - Link Editor on the All Links Tab
+- Selecting a row in the All Links list loads that link into a new editor under the list: **Tab** (move to the first free cell of another tab; a full tab is refused), **Name** (custom display name), **Path** (type, **File...**, **Folder...**, or drag and drop), and **Note**.
+- **Save** and **Revert** are enabled only when something changed. **Remove...** (with confirmation), **Open Folder**, and **Launch** act on the selected link.
+- A path that doesn't exist (for example an unplugged USB drive) can be saved after a warning; the link keeps the warning icon and the editor shows it as missing.
+- Changing a path rebuilds the icon off-grid first, so a failure leaves the original link in place.
+- Moving to another row, leaving All Links, or closing the app with unsaved edits asks Save / Discard / Cancel.
+- The All Links list is single-select, rows point at their grid icon, and multi-line notes show as " / " in the list.
+
+### Added - Custom Link Names
+- Links can have a custom display name, saved as an optional `name` attribute on `<Icon>`. Blank (or the same as the file name) means "use the file name". The hidden-folder `(H)` label uses the custom name too.
+
+### Changed
+- The 10 fixed tab-name boxes and the **Apply** button were removed; tab changes save immediately.
+- **Restore from Backup...** is now **Restore...**, under the tab buttons.
+- Right-click **Remove** on a grid icon now saves immediately (previously only on close).
+- Unhiding a folder in dark mode now uses the dark-theme label color (it used to turn black).
+
+## 2026-10-03
+
+### Added - Tab Management (no more 10-tab limit)
+- Grid tabs are now built at runtime from `ProgramManagerLayout.xml` (one per `<Tab>`), so any number of tabs is supported. The XML format is unchanged and existing layouts load as-is.
+- The All Links tab has a **tab list** (name and link count) with **Add Tab**, **Rename** (in place, or F2), **Move Up/Down**, and **Delete Tab...** buttons. Double-clicking a tab in the list opens it.
+- The same commands are on a **right-click menu on the tab headers**; on the All Links header only Add Tab is offered. A tab added from a grid tab's header is inserted after it and opened.
+- **Delete Tab** on a tab with links offers to move them to another tab (default) or delete them, with a second confirmation before anything is removed. Moves are refused when the chosen tab lacks free cells, and the last remaining tab can't be deleted. A `BeforeDelete-` copy of the layout is saved to `BACKUP-XML` first.
+- The 10 fixed tab-name boxes are detached from the All Links tab (still in the designer pending cleanup).
+
+### Added - Two-Row Tabs
+- `TabControl1.Multiline` is on, so the tab strip wraps onto another row when the tabs don't fit.
+
+### Added - Restore from Backup
+- **Restore from Backup...** on the All Links tab picks a layout file (BACKUP-XML by default), validates it, confirms, saves a `BeforeRestore-` copy of the current layout, and reloads every tab.
+
+### Changed - Data Safety
+- A one-time `PreDynamicTabs-ProgramManagerLayout.xml` snapshot is kept in BACKUP-XML. `PreDynamicTabs-`, `BeforeDelete-`, and `BeforeRestore-` files are never pruned.
+- If the layout file can't be read at startup, nothing is saved that session and the file is left untouched.
+- Layout saves are written to a temp file and then swapped in. Saving is skipped while the layout is being reloaded, and a layout with no tabs is never written.
+- A saved link whose cell is out of range or already taken goes into the first free cell instead of being dropped; a file whose icon can't be read gets a generic icon instead of being dropped.
+
+### Fixed
+- Inserting a tab on a visible window crashed the owner-drawn tab header (Windows asks to paint the new tab before WinForms has added it), which froze the app mid-reload.
+
+### Changed - Rename
+- `Form1` renamed to `frmMain` (files, class, startup form).
+
 ## 2026-06-09
 
 ### Added - User-Selectable Screenshot Folder
