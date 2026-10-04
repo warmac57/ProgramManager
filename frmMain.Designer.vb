@@ -30,9 +30,6 @@ Partial Class frmMain
         colName = New ColumnHeader()
         colPath = New ColumnHeader()
         colNote = New ColumnHeader()
-        Tab5SettingsPanel = New Panel()
-        Tab5SettingsTable = New TableLayoutPanel()
-        btnRestoreBackup = New Button()
         pnlLinkEditor = New Panel()
         tlpLinkEditor = New TableLayoutPanel()
         lblLinkTab = New Label()
@@ -53,6 +50,8 @@ Partial Class frmMain
         btnLinkRemove = New Button()
         btnLinkOpenFolder = New Button()
         btnLinkLaunch = New Button()
+        Tab5SettingsPanel = New Panel()
+        Tab5SettingsTable = New TableLayoutPanel()
         pnlTabManager = New Panel()
         lvwTabs = New ListView()
         colTabName = New ColumnHeader()
@@ -63,6 +62,7 @@ Partial Class frmMain
         btnTabMoveUp = New Button()
         btnTabMoveDown = New Button()
         btnTabDelete = New Button()
+        btnRestoreBackup = New Button()
         lblTheme = New Label()
         btnDarkModeToggle = New Button()
         btnResetScreenshotFolder = New Button()
@@ -87,12 +87,12 @@ Partial Class frmMain
         TabControl1.Controls.Add(tabAllLinks)
         TabControl1.Dock = DockStyle.Fill
         TabControl1.DrawMode = TabDrawMode.OwnerDrawFixed
-        TabControl1.Multiline = True
         TabControl1.ItemSize = New Size(48, 30)
         TabControl1.Location = New Point(0, 0)
+        TabControl1.Multiline = True
         TabControl1.Name = "TabControl1"
         TabControl1.SelectedIndex = 0
-        TabControl1.Size = New Size(672, 532)
+        TabControl1.Size = New Size(672, 600)
         TabControl1.TabIndex = 0
         ' 
         ' tabAllLinks
@@ -101,7 +101,7 @@ Partial Class frmMain
         tabAllLinks.Location = New Point(4, 34)
         tabAllLinks.Name = "tabAllLinks"
         tabAllLinks.Padding = New Padding(3)
-        tabAllLinks.Size = New Size(664, 494)
+        tabAllLinks.Size = New Size(664, 562)
         tabAllLinks.TabIndex = 10
         tabAllLinks.Text = "All Links"
         tabAllLinks.UseVisualStyleBackColor = True
@@ -115,7 +115,7 @@ Partial Class frmMain
         Tab5MainPanel.Dock = DockStyle.Fill
         Tab5MainPanel.Location = New Point(3, 3)
         Tab5MainPanel.Name = "Tab5MainPanel"
-        Tab5MainPanel.Size = New Size(658, 488)
+        Tab5MainPanel.Size = New Size(658, 556)
         Tab5MainPanel.TabIndex = 0
         ' 
         ' lvwAllLinks
@@ -124,11 +124,10 @@ Partial Class frmMain
         lvwAllLinks.Dock = DockStyle.Fill
         lvwAllLinks.FullRowSelect = True
         lvwAllLinks.GridLines = True
-        lvwAllLinks.HideSelection = False
-        lvwAllLinks.MultiSelect = False
         lvwAllLinks.Location = New Point(0, 247)
+        lvwAllLinks.MultiSelect = False
         lvwAllLinks.Name = "lvwAllLinks"
-        lvwAllLinks.Size = New Size(658, 241)
+        lvwAllLinks.Size = New Size(658, 141)
         lvwAllLinks.TabIndex = 0
         lvwAllLinks.UseCompatibleStateImageBehavior = False
         lvwAllLinks.View = View.Details
@@ -157,6 +156,7 @@ Partial Class frmMain
         ' 
         pnlLinkEditor.Controls.Add(tlpLinkEditor)
         pnlLinkEditor.Dock = DockStyle.Bottom
+        pnlLinkEditor.Location = New Point(0, 388)
         pnlLinkEditor.Name = "pnlLinkEditor"
         pnlLinkEditor.Padding = New Padding(10, 6, 10, 6)
         pnlLinkEditor.Size = New Size(658, 168)
@@ -181,12 +181,8 @@ Partial Class frmMain
         tlpLinkEditor.Controls.Add(txtLinkNote, 1, 2)
         tlpLinkEditor.Controls.Add(lblLinkStatus, 0, 3)
         tlpLinkEditor.Controls.Add(flpLinkButtons, 2, 3)
-        tlpLinkEditor.SetColumnSpan(txtLinkName, 2)
-        tlpLinkEditor.SetColumnSpan(txtLinkPath, 3)
-        tlpLinkEditor.SetColumnSpan(txtLinkNote, 4)
-        tlpLinkEditor.SetColumnSpan(lblLinkStatus, 2)
-        tlpLinkEditor.SetColumnSpan(flpLinkButtons, 3)
         tlpLinkEditor.Dock = DockStyle.Fill
+        tlpLinkEditor.Location = New Point(10, 6)
         tlpLinkEditor.Name = "tlpLinkEditor"
         tlpLinkEditor.RowCount = 4
         tlpLinkEditor.RowStyles.Add(New RowStyle(SizeType.Absolute, 30F))
@@ -200,7 +196,9 @@ Partial Class frmMain
         ' 
         lblLinkTab.Anchor = AnchorStyles.Left
         lblLinkTab.AutoSize = True
+        lblLinkTab.Location = New Point(3, 7)
         lblLinkTab.Name = "lblLinkTab"
+        lblLinkTab.Size = New Size(29, 15)
         lblLinkTab.TabIndex = 0
         lblLinkTab.Text = "Tab:"
         ' 
@@ -208,38 +206,50 @@ Partial Class frmMain
         ' 
         cboLinkTab.Dock = DockStyle.Fill
         cboLinkTab.DropDownStyle = ComboBoxStyle.DropDownList
+        cboLinkTab.Location = New Point(45, 3)
         cboLinkTab.Name = "cboLinkTab"
+        cboLinkTab.Size = New Size(152, 23)
         cboLinkTab.TabIndex = 1
         ' 
         ' lblLinkName
         ' 
         lblLinkName.Anchor = AnchorStyles.Left
         lblLinkName.AutoSize = True
+        lblLinkName.Location = New Point(203, 7)
         lblLinkName.Name = "lblLinkName"
+        lblLinkName.Size = New Size(42, 15)
         lblLinkName.TabIndex = 2
         lblLinkName.Text = "Name:"
         ' 
         ' txtLinkName
         ' 
+        tlpLinkEditor.SetColumnSpan(txtLinkName, 2)
         txtLinkName.Dock = DockStyle.Fill
+        txtLinkName.Location = New Point(251, 3)
         txtLinkName.Name = "txtLinkName"
         txtLinkName.PlaceholderText = "(file or folder name)"
+        txtLinkName.Size = New Size(384, 23)
         txtLinkName.TabIndex = 3
         ' 
         ' lblLinkPath
         ' 
         lblLinkPath.Anchor = AnchorStyles.Left
         lblLinkPath.AutoSize = True
+        lblLinkPath.Location = New Point(3, 38)
         lblLinkPath.Name = "lblLinkPath"
+        lblLinkPath.Size = New Size(34, 15)
         lblLinkPath.TabIndex = 4
         lblLinkPath.Text = "Path:"
         ' 
         ' txtLinkPath
         ' 
         txtLinkPath.AllowDrop = True
+        tlpLinkEditor.SetColumnSpan(txtLinkPath, 3)
         txtLinkPath.Dock = DockStyle.Fill
+        txtLinkPath.Location = New Point(45, 34)
         txtLinkPath.Margin = New Padding(3, 4, 3, 3)
         txtLinkPath.Name = "txtLinkPath"
+        txtLinkPath.Size = New Size(437, 23)
         txtLinkPath.TabIndex = 5
         ' 
         ' flpLinkBrowse
@@ -247,14 +257,16 @@ Partial Class frmMain
         flpLinkBrowse.AutoSize = True
         flpLinkBrowse.Controls.Add(btnLinkBrowseFile)
         flpLinkBrowse.Controls.Add(btnLinkBrowseFolder)
+        flpLinkBrowse.Location = New Point(485, 30)
         flpLinkBrowse.Margin = New Padding(0)
         flpLinkBrowse.Name = "flpLinkBrowse"
+        flpLinkBrowse.Size = New Size(152, 32)
         flpLinkBrowse.TabIndex = 6
         flpLinkBrowse.WrapContents = False
         ' 
         ' btnLinkBrowseFile
         ' 
-        btnLinkBrowseFile.Margin = New Padding(3)
+        btnLinkBrowseFile.Location = New Point(3, 3)
         btnLinkBrowseFile.Name = "btnLinkBrowseFile"
         btnLinkBrowseFile.Size = New Size(70, 26)
         btnLinkBrowseFile.TabIndex = 0
@@ -263,7 +275,7 @@ Partial Class frmMain
         ' 
         ' btnLinkBrowseFolder
         ' 
-        btnLinkBrowseFolder.Margin = New Padding(3)
+        btnLinkBrowseFolder.Location = New Point(79, 3)
         btnLinkBrowseFolder.Name = "btnLinkBrowseFolder"
         btnLinkBrowseFolder.Size = New Size(70, 26)
         btnLinkBrowseFolder.TabIndex = 1
@@ -272,33 +284,40 @@ Partial Class frmMain
         ' 
         ' lblLinkNote
         ' 
-        lblLinkNote.Anchor = AnchorStyles.Left
         lblLinkNote.AutoSize = True
+        lblLinkNote.Location = New Point(3, 68)
+        lblLinkNote.Margin = New Padding(3, 6, 3, 0)
         lblLinkNote.Name = "lblLinkNote"
+        lblLinkNote.Size = New Size(36, 15)
         lblLinkNote.TabIndex = 7
         lblLinkNote.Text = "Note:"
-        lblLinkNote.Anchor = AnchorStyles.Top Or AnchorStyles.Left
-        lblLinkNote.Margin = New Padding(3, 6, 3, 0)
         ' 
         ' txtLinkNote
         ' 
+        tlpLinkEditor.SetColumnSpan(txtLinkNote, 4)
         txtLinkNote.Dock = DockStyle.Fill
+        txtLinkNote.Location = New Point(45, 65)
         txtLinkNote.Multiline = True
         txtLinkNote.Name = "txtLinkNote"
         txtLinkNote.ScrollBars = ScrollBars.Vertical
+        txtLinkNote.Size = New Size(590, 54)
         txtLinkNote.TabIndex = 8
         ' 
         ' lblLinkStatus
         ' 
         lblLinkStatus.AutoEllipsis = True
+        tlpLinkEditor.SetColumnSpan(lblLinkStatus, 2)
         lblLinkStatus.Dock = DockStyle.Fill
+        lblLinkStatus.Location = New Point(3, 122)
         lblLinkStatus.Name = "lblLinkStatus"
+        lblLinkStatus.Size = New Size(194, 34)
         lblLinkStatus.TabIndex = 9
         lblLinkStatus.Text = "Select a link above to edit it."
         lblLinkStatus.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' flpLinkButtons
         ' 
+        tlpLinkEditor.SetColumnSpan(flpLinkButtons, 3)
         flpLinkButtons.Controls.Add(btnLinkSave)
         flpLinkButtons.Controls.Add(btnLinkRevert)
         flpLinkButtons.Controls.Add(btnLinkRemove)
@@ -306,14 +325,16 @@ Partial Class frmMain
         flpLinkButtons.Controls.Add(btnLinkLaunch)
         flpLinkButtons.Dock = DockStyle.Fill
         flpLinkButtons.FlowDirection = FlowDirection.RightToLeft
+        flpLinkButtons.Location = New Point(200, 122)
         flpLinkButtons.Margin = New Padding(0)
         flpLinkButtons.Name = "flpLinkButtons"
+        flpLinkButtons.Size = New Size(438, 34)
         flpLinkButtons.TabIndex = 10
         flpLinkButtons.WrapContents = False
         ' 
         ' btnLinkSave
         ' 
-        btnLinkSave.Margin = New Padding(3)
+        btnLinkSave.Location = New Point(355, 3)
         btnLinkSave.Name = "btnLinkSave"
         btnLinkSave.Size = New Size(80, 26)
         btnLinkSave.TabIndex = 0
@@ -322,7 +343,7 @@ Partial Class frmMain
         ' 
         ' btnLinkRevert
         ' 
-        btnLinkRevert.Margin = New Padding(3)
+        btnLinkRevert.Location = New Point(269, 3)
         btnLinkRevert.Name = "btnLinkRevert"
         btnLinkRevert.Size = New Size(80, 26)
         btnLinkRevert.TabIndex = 1
@@ -331,7 +352,7 @@ Partial Class frmMain
         ' 
         ' btnLinkRemove
         ' 
-        btnLinkRemove.Margin = New Padding(3)
+        btnLinkRemove.Location = New Point(177, 3)
         btnLinkRemove.Name = "btnLinkRemove"
         btnLinkRemove.Size = New Size(86, 26)
         btnLinkRemove.TabIndex = 2
@@ -340,7 +361,7 @@ Partial Class frmMain
         ' 
         ' btnLinkOpenFolder
         ' 
-        btnLinkOpenFolder.Margin = New Padding(3)
+        btnLinkOpenFolder.Location = New Point(75, 3)
         btnLinkOpenFolder.Name = "btnLinkOpenFolder"
         btnLinkOpenFolder.Size = New Size(96, 26)
         btnLinkOpenFolder.TabIndex = 3
@@ -349,7 +370,7 @@ Partial Class frmMain
         ' 
         ' btnLinkLaunch
         ' 
-        btnLinkLaunch.Margin = New Padding(3)
+        btnLinkLaunch.Location = New Point(-11, 3)
         btnLinkLaunch.Name = "btnLinkLaunch"
         btnLinkLaunch.Size = New Size(80, 26)
         btnLinkLaunch.TabIndex = 4
@@ -380,8 +401,6 @@ Partial Class frmMain
         Tab5SettingsTable.Controls.Add(Label2, 0, 7)
         Tab5SettingsTable.Controls.Add(txtScreenshotFolder, 1, 7)
         Tab5SettingsTable.Controls.Add(Label1, 3, 7)
-        Tab5SettingsTable.SetColumnSpan(pnlTabManager, 4)
-        Tab5SettingsTable.SetRowSpan(pnlTabManager, 6)
         Tab5SettingsTable.Dock = DockStyle.Fill
         Tab5SettingsTable.Location = New Point(10, 10)
         Tab5SettingsTable.Name = "Tab5SettingsTable"
@@ -400,11 +419,14 @@ Partial Class frmMain
         ' 
         ' pnlTabManager
         ' 
+        Tab5SettingsTable.SetColumnSpan(pnlTabManager, 4)
         pnlTabManager.Controls.Add(lvwTabs)
         pnlTabManager.Controls.Add(flpTabButtons)
         pnlTabManager.Dock = DockStyle.Fill
+        pnlTabManager.Location = New Point(3, 2)
         pnlTabManager.Margin = New Padding(3, 2, 3, 2)
         pnlTabManager.Name = "pnlTabManager"
+        Tab5SettingsTable.SetRowSpan(pnlTabManager, 6)
         pnlTabManager.Size = New Size(632, 164)
         pnlTabManager.TabIndex = 29
         ' 
@@ -415,8 +437,8 @@ Partial Class frmMain
         lvwTabs.FullRowSelect = True
         lvwTabs.GridLines = True
         lvwTabs.HeaderStyle = ColumnHeaderStyle.Nonclickable
-        lvwTabs.HideSelection = False
         lvwTabs.LabelEdit = True
+        lvwTabs.Location = New Point(0, 0)
         lvwTabs.MultiSelect = False
         lvwTabs.Name = "lvwTabs"
         lvwTabs.Size = New Size(513, 164)
@@ -433,7 +455,6 @@ Partial Class frmMain
         ' 
         colTabLinks.Text = "Links"
         colTabLinks.TextAlign = HorizontalAlignment.Right
-        colTabLinks.Width = 60
         ' 
         ' flpTabButtons
         ' 
@@ -445,6 +466,7 @@ Partial Class frmMain
         flpTabButtons.Controls.Add(btnRestoreBackup)
         flpTabButtons.Dock = DockStyle.Right
         flpTabButtons.FlowDirection = FlowDirection.TopDown
+        flpTabButtons.Location = New Point(513, 0)
         flpTabButtons.Name = "flpTabButtons"
         flpTabButtons.Size = New Size(119, 164)
         flpTabButtons.TabIndex = 1
@@ -452,6 +474,7 @@ Partial Class frmMain
         ' 
         ' btnTabAdd
         ' 
+        btnTabAdd.Location = New Point(6, 1)
         btnTabAdd.Margin = New Padding(6, 1, 3, 1)
         btnTabAdd.Name = "btnTabAdd"
         btnTabAdd.Size = New Size(110, 25)
@@ -461,6 +484,7 @@ Partial Class frmMain
         ' 
         ' btnTabRename
         ' 
+        btnTabRename.Location = New Point(6, 28)
         btnTabRename.Margin = New Padding(6, 1, 3, 1)
         btnTabRename.Name = "btnTabRename"
         btnTabRename.Size = New Size(110, 25)
@@ -470,6 +494,7 @@ Partial Class frmMain
         ' 
         ' btnTabMoveUp
         ' 
+        btnTabMoveUp.Location = New Point(6, 55)
         btnTabMoveUp.Margin = New Padding(6, 1, 3, 1)
         btnTabMoveUp.Name = "btnTabMoveUp"
         btnTabMoveUp.Size = New Size(110, 25)
@@ -479,6 +504,7 @@ Partial Class frmMain
         ' 
         ' btnTabMoveDown
         ' 
+        btnTabMoveDown.Location = New Point(6, 82)
         btnTabMoveDown.Margin = New Padding(6, 1, 3, 1)
         btnTabMoveDown.Name = "btnTabMoveDown"
         btnTabMoveDown.Size = New Size(110, 25)
@@ -488,6 +514,7 @@ Partial Class frmMain
         ' 
         ' btnTabDelete
         ' 
+        btnTabDelete.Location = New Point(6, 109)
         btnTabDelete.Margin = New Padding(6, 1, 3, 1)
         btnTabDelete.Name = "btnTabDelete"
         btnTabDelete.Size = New Size(110, 25)
@@ -497,6 +524,7 @@ Partial Class frmMain
         ' 
         ' btnRestoreBackup
         ' 
+        btnRestoreBackup.Location = New Point(6, 136)
         btnRestoreBackup.Margin = New Padding(6, 1, 3, 1)
         btnRestoreBackup.Name = "btnRestoreBackup"
         btnRestoreBackup.Size = New Size(110, 25)
@@ -555,16 +583,16 @@ Partial Class frmMain
         txtScreenshotFolder.Margin = New Padding(3, 2, 3, 2)
         txtScreenshotFolder.Name = "txtScreenshotFolder"
         txtScreenshotFolder.ReadOnly = True
-        txtScreenshotFolder.Size = New Size(231, 23)
+        txtScreenshotFolder.Size = New Size(234, 23)
         txtScreenshotFolder.TabIndex = 25
         ' 
         ' Label1
         ' 
         Label1.AutoSize = True
         Label1.Dock = DockStyle.Fill
-        Label1.Location = New Point(404, 196)
+        Label1.Location = New Point(401, 196)
         Label1.Name = "Label1"
-        Label1.Size = New Size(231, 31)
+        Label1.Size = New Size(234, 31)
         Label1.TabIndex = 27
         Label1.Text = "<-Drag folder to set path, or use Default"
         Label1.TextAlign = ContentAlignment.MiddleLeft
@@ -574,7 +602,7 @@ Partial Class frmMain
         AllowDrop = True
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(672, 532)
+        ClientSize = New Size(672, 600)
         Controls.Add(TabControl1)
         FormBorderStyle = FormBorderStyle.SizableToolWindow
         MinimumSize = New Size(398, 293)
@@ -583,17 +611,17 @@ Partial Class frmMain
         Text = "Program Manager"
         TabControl1.ResumeLayout(False)
         tabAllLinks.ResumeLayout(False)
-        flpLinkButtons.ResumeLayout(False)
-        flpLinkBrowse.ResumeLayout(False)
+        Tab5MainPanel.ResumeLayout(False)
+        pnlLinkEditor.ResumeLayout(False)
         tlpLinkEditor.ResumeLayout(False)
         tlpLinkEditor.PerformLayout()
-        pnlLinkEditor.ResumeLayout(False)
-        Tab5MainPanel.ResumeLayout(False)
+        flpLinkBrowse.ResumeLayout(False)
+        flpLinkButtons.ResumeLayout(False)
         Tab5SettingsPanel.ResumeLayout(False)
-        pnlTabManager.ResumeLayout(False)
-        flpTabButtons.ResumeLayout(False)
         Tab5SettingsTable.ResumeLayout(False)
         Tab5SettingsTable.PerformLayout()
+        pnlTabManager.ResumeLayout(False)
+        flpTabButtons.ResumeLayout(False)
         ResumeLayout(False)
     End Sub
 
