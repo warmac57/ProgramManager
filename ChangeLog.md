@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-04 (after v1.1.0)
+
+### Changed - Retargeted to .NET 10
+- The project now targets `net10.0-windows` (was `net8.0-windows`). .NET 8 support ends on 2026-11-10; .NET 10 is the current long-term-support release. Users need the **.NET 10.0 Desktop Runtime**.
+- Build output moves from `bin\<Config>\net8.0-windows` to `bin\<Config>\net10.0-windows`. `Release.ps1` publishes from the new folder, and its release notes link to the .NET 10 runtime.
+
+### Added - README Download and Run Section
+- Steps for installing the runtime, downloading the latest release, unblocking the zip, choosing a writable folder, and getting past SmartScreen, plus how to update without losing settings.
+- The old Getting Started section is now **Building from Source** and lists the .NET 10 SDK.
+
 ## 2026-10-04 - v1.1.0
 
 ### Released - v1.1.0

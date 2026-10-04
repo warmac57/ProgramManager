@@ -27,7 +27,7 @@ $env:Path = [System.Environment]::GetEnvironmentVariable('Path','Machine') + ';'
 
 $ProjectRoot  = $PSScriptRoot
 $ProjectFile  = "$ProjectRoot\ProgramManager.vbproj"
-$PublishDir   = "$ProjectRoot\bin\Release\net8.0-windows\publish"
+$PublishDir   = "$ProjectRoot\bin\Release\net10.0-windows\publish"
 $ZipPath      = "$ProjectRoot\ProgramManager-v$Version.zip"
 $Tag          = "v$Version"
 $Exclude      = @("ProgramManagerLayout.xml", "ProgramManagerSettings.xml", "BACKUP-XML")
@@ -106,7 +106,7 @@ $Message
 ## Requirements
 
 - Windows 10 / 11
-- [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [.NET 10.0 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 ## Installation
 

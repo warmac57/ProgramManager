@@ -1,6 +1,6 @@
 # Program Manager
 
-A lightweight Windows desktop utility for organizing shortcuts to programs, files, and folders in a tabbed grid interface. Built with VB.NET and Windows Forms (.NET 8).
+A lightweight Windows desktop utility for organizing shortcuts to programs, files, and folders in a tabbed grid interface. Built with VB.NET and Windows Forms (.NET 10).
 Desktop Folders can be created and loaded into the grid, and then the hidden file attribute set to hide so they no longer appear on the desktop. This is provided as an extended feature to clean up the desktop by providing a secondary way to store files, folders, and links that may otherwise appear on the desktop. Also note that this is a roll-up form by double clicking on the header.
 
 ## Features
@@ -37,12 +37,26 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 
 <img width="640" alt="Program Manager All Links tab with tab list, link list, and link editor" src="docs/images/ProgramMan3.jpg" />
 
-## Getting Started
+## Download and Run
+
+1. Install the [.NET 10.0 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) if you don't already have it. Choose the **.NET Desktop Runtime** for Windows x64.
+2. Download **ProgramManager-vX.Y.Z.zip** from the [latest release](https://github.com/warmac57/ProgramManager/releases/latest).
+3. Before extracting, right-click the zip, choose **Properties**, tick **Unblock**, and click **OK**. This stops Windows from flagging the program as downloaded from the internet.
+4. Extract the zip to any folder you can write to, such as `Documents\ProgramManager`. Avoid `C:\Program Files`, because Program Manager saves its settings next to the `.exe`.
+5. Run **ProgramManager.exe**.
+
+The app isn't code-signed, so the first time you run it Windows SmartScreen may show "Windows protected your PC". Click **More info**, then **Run anyway**.
+
+### Updating
+
+Download the newest zip and extract it over your existing folder, replacing the files. Release zips never contain `ProgramManagerLayout.xml`, `ProgramManagerSettings.xml`, or `BACKUP-XML`, so your tabs, links, and settings are kept.
+
+## Building from Source
 
 ### Requirements
 
 - Windows 10/11
-- .NET 8.0 SDK or Runtime
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 ### Build and Run
 
