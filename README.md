@@ -23,7 +23,19 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 - **Missing link detection** - Icons whose file or folder no longer exists are greyed out in place rather than silently removed; double-clicking shows a helpful message and the entry is preserved in XML until you choose to remove it
 - **Portable** - All settings stored next to the executable; copy the folder for independent instances
 
-<img width="500" height="400" alt="prg-man " src="https://github.com/user-attachments/assets/08abb6e1-356f-4ed2-b62d-6e508473e69a" />
+## Screenshots
+
+**Grid tab** - shortcuts to folders and programs in a 4x4 grid, with the tab strip across the top
+
+<img width="640" alt="Program Manager grid tab with folder shortcuts" src="docs/images/ProgramMan.jpg" />
+
+**Notes and status badges** - a green ✓ in a cell's corner marks a shortcut that has a note
+
+<img width="640" alt="Program Manager tab with remote and network shortcuts, some showing note badges" src="docs/images/ProgramMan2.jpg" />
+
+**All Links tab** - manage tabs, restore backups, switch theme, set the screenshot folder, and edit any link
+
+<img width="640" alt="Program Manager All Links tab with tab list, link list, and link editor" src="docs/images/ProgramMan3.jpg" />
 
 ## Getting Started
 
