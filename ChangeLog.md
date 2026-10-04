@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-04 - v1.1.0
+
+### Released - v1.1.0
+- Published [v1.1.0](https://github.com/warmac57/ProgramManager/releases/tag/v1.1.0) on GitHub. It includes everything since v1.0.4: dynamic tabs with tab management, two-row tab strip, restore from backup, the All Links link editor, custom link names, and the data-safety changes (see the 2026-10-03 entries below).
+
+### Changed - Release Notes
+- Updated the release notes template in `Release.ps1` to match the current app: unlimited tabs, tab management, link editor, Print Screen capture, restore from backup, and missing link detection. The old text still described 8 fixed tabs and the removed tab-name boxes.
+
+### Changed - README
+- Replaced the single older screenshot with a **Screenshots** section showing a grid tab, note badges, and the All Links tab. The images are in `docs/images`.
+
+### Removed
+- Leftover `Readme - Copy.md` and unused `prg-man .jpg` from the repo root.
+
 ## 2026-10-03 (Stage 3)
 
 ### Added - Link Editor on the All Links Tab
