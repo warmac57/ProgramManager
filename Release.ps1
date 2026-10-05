@@ -44,6 +44,14 @@ if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) { Fail "dotnet CLI 
 
 $ghAuth = gh auth status 2>&1
 if ($LASTEXITCODE -ne 0) { Fail "Not logged in to GitHub. Run: gh auth login" }
+
+# Stop before building or pushing anything if this version was already released.
+Set-Location $ProjectRoot
+$ErrorActionPreference = "Continue"
+gh release view $Tag *> $null
+$releaseExists = ($LASTEXITCODE -eq 0)
+$ErrorActionPreference = "Stop"
+if ($releaseExists) { Fail "Release $Tag already exists on GitHub. Use a new version number." }
 Ok "All prerequisites met"
 
 # ── 1. Build & Publish ───────────────────────────────────────────────────────
@@ -126,10 +134,32 @@ No installer required. All settings are stored next to the executable.
 5. Use the **All Links** tab to edit links, manage tabs, restore a backup, toggle dark mode, and set the screenshot folder
 "@
 
-gh release create $Tag $ZipPath `
+# Capture gh's output so a failure shows its real error. Windows PowerShell turns a
+# native command's stderr into error records, so relax "Stop" around the call.
+$ErrorActionPreference = "Continue"
+$ghOutput = gh release create $Tag $ZipPath `
     --title "ProgramManager $Tag" `
-    --notes $Notes
-if ($LASTEXITCODE -ne 0) { Fail "gh release create failed" }
+    --notes $Notes 2>&1 | ForEach-Object { "$_" }
+$ghExit = $LASTEXITCODE
+$ErrorActionPreference = "Stop"
+
+if ($ghExit -ne 0) {
+    Write-Host "`n    gh release create exited with code $($ghExit):" -ForegroundColor Yellow
+    $ghOutput | ForEach-Object { Write-Host "      $_" -ForegroundColor Yellow }
+
+    # gh can report a failure even though the release went through (for example a
+    # dropped connection after the upload finished), so check before giving up.
+    $ErrorActionPreference = "Continue"
+    $assets = gh release view $Tag --json assets --jq '.assets[].name' 2>$null
+    $viewExit = $LASTEXITCODE
+    $ErrorActionPreference = "Stop"
+
+    if ($viewExit -eq 0 -and ($assets -contains (Split-Path $ZipPath -Leaf))) {
+        Write-Host "    WARNING: gh reported an error, but release $Tag exists with its zip attached." -ForegroundColor Yellow
+    } else {
+        Fail "gh release create failed. The zip was kept at $ZipPath"
+    }
+}
 Ok "Release published"
 
 # ── 5. Cleanup local zip ─────────────────────────────────────────────────────
