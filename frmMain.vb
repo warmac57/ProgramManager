@@ -1,4 +1,5 @@
 Imports System.Runtime.InteropServices
+Imports System.Text.RegularExpressions
 Imports System.Xml
 
 Public Class frmMain
@@ -155,6 +156,7 @@ Public Class frmMain
         ' Wire up Tab 5 buttons.
         AddHandler btnRestoreBackup.Click, AddressOf RestoreBackup_Click
         AddHandler btnDarkModeToggle.Click, AddressOf DarkModeToggle_Click
+        AddHandler btnCreateAppShortcuts.Click, AddressOf CreateAppShortcuts_Click
         AddHandler lvwAllLinks.DoubleClick, AddressOf AllLinksListView_DoubleClick
 
         ' Wire up the link editor under the All Links list.
@@ -792,6 +794,91 @@ Public Class frmMain
         isDarkMode = Not isDarkMode
         ApplyTheme()
         SaveLayout()
+    End Sub
+
+    ''' <summary>
+    ''' Runs Create-AppShortcuts.ps1 (shipped next to the exe) to build a folder in Documents
+    ''' with a shortcut to every app in Windows' All Apps list, then opens it in File Explorer.
+    ''' The script runs hidden and the UI stays responsive while it works.
+    ''' </summary>
+    Private Async Sub CreateAppShortcuts_Click(sender As Object, e As EventArgs)
+        Dim scriptPath As String = IO.Path.Combine(Application.StartupPath, "Create-AppShortcuts.ps1")
+        If Not IO.File.Exists(scriptPath) Then
+            MessageBox.Show("Create-AppShortcuts.ps1 was not found next to ProgramManager.exe:" & vbCrLf & vbCrLf & scriptPath,
+                            "Create App Shortcuts", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        Dim destFolder As String = IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "All Apps Shortcuts")
+        If MessageBox.Show("Create a shortcut to every app in the Windows All Apps list in:" & vbCrLf & vbCrLf &
+                           destFolder & vbCrLf & vbCrLf &
+                           "Shortcuts from a previous run in that folder are replaced. This can take a minute.",
+                           "Create App Shortcuts", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) <> DialogResult.OK Then
+            Return
+        End If
+
+        Dim startInfo As New ProcessStartInfo(
+            IO.Path.Combine(Environment.SystemDirectory, "WindowsPowerShell\v1.0\powershell.exe")) With {
+            .UseShellExecute = False,
+            .CreateNoWindow = True,
+            .RedirectStandardOutput = True,
+            .RedirectStandardError = True
+        }
+        For Each arg As String In {"-NoProfile", "-ExecutionPolicy", "Bypass", "-File", scriptPath, "-Destination", destFolder}
+            startInfo.ArgumentList.Add(arg)
+        Next
+
+        Dim buttonText As String = btnCreateAppShortcuts.Text
+        btnCreateAppShortcuts.Enabled = False
+        btnCreateAppShortcuts.Text = "Creating Shortcuts..."
+        UseWaitCursor = True
+        Dim output As String = ""
+        Dim errors As String = ""
+        Dim exitCode As Integer
+        Try
+            Using proc As Process = Process.Start(startInfo)
+                ' Read both streams while waiting so a full pipe can't stall the script.
+                Dim outputTask = proc.StandardOutput.ReadToEndAsync()
+                Dim errorTask = proc.StandardError.ReadToEndAsync()
+                Await proc.WaitForExitAsync()
+                output = Await outputTask
+                errors = Await errorTask
+                exitCode = proc.ExitCode
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Could not run PowerShell." & vbCrLf & vbCrLf & ex.Message,
+                            "Create App Shortcuts", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        Finally
+            UseWaitCursor = False
+            btnCreateAppShortcuts.Text = buttonText
+            btnCreateAppShortcuts.Enabled = True
+        End Try
+
+        If exitCode <> 0 OrElse Not IO.Directory.Exists(destFolder) Then
+            Dim detail As String = If(errors.Trim() <> "", errors.Trim(), output.Trim())
+            If detail.Length > 1500 Then detail = detail.Substring(0, 1500) & "..."
+            MessageBox.Show("The shortcut script failed." & vbCrLf & vbCrLf & detail,
+                            "Create App Shortcuts", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        Try
+            Process.Start("explorer.exe", """" & destFolder & """")
+        Catch ex As Exception
+            MessageBox.Show("The shortcuts were created in:" & vbCrLf & destFolder & vbCrLf & vbCrLf &
+                            "but File Explorer could not be opened: " & ex.Message,
+                            "Create App Shortcuts", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End Try
+
+        ' The script ends with "N failed" when some apps couldn't get a shortcut.
+        Dim failed As Match = Regex.Match(output, "^(\d+) failed", RegexOptions.Multiline)
+        If failed.Success Then
+            MessageBox.Show($"{failed.Groups(1).Value} app(s) could not get a shortcut. The rest were created in:" & vbCrLf & destFolder,
+                            "Create App Shortcuts", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End If
     End Sub
 
     Private Sub ApplyTheme()

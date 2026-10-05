@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-05
+
+### Added - Create App Shortcuts
+- New **Create App Shortcuts...** button on the All Links tab, next to the theme button. It runs `Create-AppShortcuts.ps1` hidden in the background and opens the result in File Explorer.
+- The script creates `Documents\All Apps Shortcuts` with a shortcut to every item in `shell:AppsFolder` (the Windows All Apps list), including Store/UWP apps, each with the app's real icon. Re-running replaces the previous shortcuts.
+- `Create-AppShortcuts.ps1` is part of the project and is copied to the build output and the publish folder, so it ships in the release zip. It takes an optional `-Destination` and `-OpenFolder` when run by hand.
+- The button is disabled with a wait cursor while the script runs; a missing script, a PowerShell error, or apps that couldn't get a shortcut are reported in a message.
+
 ## 2026-10-04 (after v1.1.0)
 
 ### Changed - Retargeted to .NET 10

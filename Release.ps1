@@ -96,6 +96,7 @@ $Message
 - **Link editor** - Select a row on the All Links tab to change that link's tab, custom name, path, and note
 - **Hide/unhide desktop folders** - Toggle the Windows Hidden attribute on desktop folders via right-click
 - **Dark / light mode** - Switch themes from the management tab; preference is persisted
+- **Create App Shortcuts** - One click builds a Documents\All Apps Shortcuts folder with a shortcut to every app in the Windows All Apps list and opens it in File Explorer
 - **Print Screen capture** - While Program Manager is running, Prt Sc saves a full-screen capture to a folder you choose
 - **Roll-up** - Double-click the title bar to collapse the window to just the title bar
 - **Automatic XML backups** - On every launch, both data files are backed up to a BACKUP-XML subfolder; the last 10 backups per file are retained, plus a kept copy before every tab delete or restore
