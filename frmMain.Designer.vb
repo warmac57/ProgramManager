@@ -64,7 +64,9 @@ Partial Class frmMain
         btnTabDelete = New Button()
         btnRestoreBackup = New Button()
         lblTheme = New Label()
+        flpThemeButtons = New FlowLayoutPanel()
         btnDarkModeToggle = New Button()
+        btnCreateAppShortcuts = New Button()
         btnResetScreenshotFolder = New Button()
         Label2 = New Label()
         txtScreenshotFolder = New TextBox()
@@ -78,6 +80,7 @@ Partial Class frmMain
         flpLinkButtons.SuspendLayout()
         Tab5SettingsPanel.SuspendLayout()
         Tab5SettingsTable.SuspendLayout()
+        flpThemeButtons.SuspendLayout()
         pnlTabManager.SuspendLayout()
         flpTabButtons.SuspendLayout()
         SuspendLayout()
@@ -396,7 +399,7 @@ Partial Class frmMain
         Tab5SettingsTable.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
         Tab5SettingsTable.Controls.Add(pnlTabManager, 0, 0)
         Tab5SettingsTable.Controls.Add(lblTheme, 0, 6)
-        Tab5SettingsTable.Controls.Add(btnDarkModeToggle, 1, 6)
+        Tab5SettingsTable.Controls.Add(flpThemeButtons, 1, 6)
         Tab5SettingsTable.Controls.Add(btnResetScreenshotFolder, 2, 7)
         Tab5SettingsTable.Controls.Add(Label2, 0, 7)
         Tab5SettingsTable.Controls.Add(txtScreenshotFolder, 1, 7)
@@ -542,16 +545,41 @@ Partial Class frmMain
         lblTheme.TabIndex = 10
         lblTheme.Text = "Theme:"
         ' 
+        ' flpThemeButtons
+        ' 
+        flpThemeButtons.AutoSize = True
+        flpThemeButtons.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Tab5SettingsTable.SetColumnSpan(flpThemeButtons, 3)
+        flpThemeButtons.Controls.Add(btnDarkModeToggle)
+        flpThemeButtons.Controls.Add(btnCreateAppShortcuts)
+        flpThemeButtons.Location = New Point(79, 168)
+        flpThemeButtons.Margin = New Padding(0)
+        flpThemeButtons.Name = "flpThemeButtons"
+        flpThemeButtons.Size = New Size(305, 28)
+        flpThemeButtons.TabIndex = 11
+        flpThemeButtons.WrapContents = False
+        ' 
         ' btnDarkModeToggle
         ' 
         btnDarkModeToggle.AutoSize = True
-        btnDarkModeToggle.Location = New Point(82, 170)
+        btnDarkModeToggle.Location = New Point(3, 2)
         btnDarkModeToggle.Margin = New Padding(3, 2, 3, 2)
         btnDarkModeToggle.Name = "btnDarkModeToggle"
         btnDarkModeToggle.Size = New Size(127, 24)
         btnDarkModeToggle.TabIndex = 11
         btnDarkModeToggle.Text = "Switch to Dark Mode"
         btnDarkModeToggle.UseVisualStyleBackColor = True
+        ' 
+        ' btnCreateAppShortcuts
+        ' 
+        btnCreateAppShortcuts.AutoSize = True
+        btnCreateAppShortcuts.Location = New Point(136, 2)
+        btnCreateAppShortcuts.Margin = New Padding(6, 2, 3, 2)
+        btnCreateAppShortcuts.Name = "btnCreateAppShortcuts"
+        btnCreateAppShortcuts.Size = New Size(166, 24)
+        btnCreateAppShortcuts.TabIndex = 12
+        btnCreateAppShortcuts.Text = "Create App Shortcuts..."
+        btnCreateAppShortcuts.UseVisualStyleBackColor = True
         ' 
         ' btnResetScreenshotFolder
         ' 
@@ -620,6 +648,8 @@ Partial Class frmMain
         Tab5SettingsPanel.ResumeLayout(False)
         Tab5SettingsTable.ResumeLayout(False)
         Tab5SettingsTable.PerformLayout()
+        flpThemeButtons.ResumeLayout(False)
+        flpThemeButtons.PerformLayout()
         pnlTabManager.ResumeLayout(False)
         flpTabButtons.ResumeLayout(False)
         ResumeLayout(False)
@@ -663,6 +693,8 @@ Partial Class frmMain
     Friend WithEvents btnTabDelete As Button
     Friend WithEvents lblTheme As Label
     Friend WithEvents btnDarkModeToggle As Button
+    Friend WithEvents flpThemeButtons As FlowLayoutPanel
+    Friend WithEvents btnCreateAppShortcuts As Button
     Friend WithEvents lvwAllLinks As ListView
     Friend WithEvents colTab As ColumnHeader
     Friend WithEvents colName As ColumnHeader

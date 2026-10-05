@@ -1,4 +1,5 @@
 Imports System.Runtime.InteropServices
+Imports System.Text.RegularExpressions
 Imports System.Xml
 
 Public Class frmMain
@@ -90,9 +91,9 @@ Public Class frmMain
     Private Const GridColumns As Integer = 4
     Private Const GridRows As Integer = 4
 
-    ' Tabs created when there is no layout file yet (matches the original fixed tab set).
+    ' Tabs created when there is no layout file yet (same count as the original fixed tab set).
     Private ReadOnly DefaultTabNames() As String =
-        {"Tab 1", "Tab 2", "Tab 3", "Tab 4", "Tab 5", "Tab 6", "Tab 7", "Tab 8", "eMails", "Tab 10"}
+        {"Tab 1", "Tab 2", "Tab 3", "Tab 4", "Tab 5", "Tab 6", "Tab 7", "Tab 8", "Tab 9", "Tab 10"}
 
     ' Set when the layout file exists but could not be read. Saving is then skipped
     ' for the session so a failed load can never overwrite the user's real layout.
@@ -101,6 +102,10 @@ Public Class frmMain
     ' True while ReloadLayout has torn down the grid tabs and is rebuilding them;
     ' a save in that window would write a half-empty layout, so SaveLayout skips it.
     Private isReloadingLayout As Boolean = False
+
+    ' True when there was no layout file at startup, i.e. this copy has never been run.
+    ' frmMain_Shown then does the one-time first-run setup.
+    Private isFirstRun As Boolean = False
 
     ' --- Theme state ---
     Private isDarkMode As Boolean = False
@@ -155,6 +160,7 @@ Public Class frmMain
         ' Wire up Tab 5 buttons.
         AddHandler btnRestoreBackup.Click, AddressOf RestoreBackup_Click
         AddHandler btnDarkModeToggle.Click, AddressOf DarkModeToggle_Click
+        AddHandler btnCreateAppShortcuts.Click, AddressOf CreateAppShortcuts_Click
         AddHandler lvwAllLinks.DoubleClick, AddressOf AllLinksListView_DoubleClick
 
         ' Wire up the link editor under the All Links list.
@@ -205,6 +211,7 @@ Public Class frmMain
         AddHandler lvwTabs.KeyDown, AddressOf TabList_KeyDown
         AddHandler lvwTabs.DoubleClick, Sub() If SelectedListTab() IsNot Nothing Then TabControl1.SelectedTab = SelectedListTab()
 
+        isFirstRun = Not IO.File.Exists(LayoutFilePath)
         BackupXmlFiles()
         LoadLayout()
         TabControl1.SelectedIndex = 0
@@ -792,6 +799,162 @@ Public Class frmMain
         isDarkMode = Not isDarkMode
         ApplyTheme()
         SaveLayout()
+    End Sub
+
+    ' --- All Apps shortcuts (Create-AppShortcuts.ps1, shipped next to the exe) ---
+
+    ' Where the script puts the shortcuts; the app passes it in so both always agree.
+    Private ReadOnly AppShortcutsFolder As String = IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "All Apps Shortcuts")
+
+    Private Async Sub CreateAppShortcuts_Click(sender As Object, e As EventArgs)
+        If MessageBox.Show("Create a shortcut to every app in the Windows All Apps list in:" & vbCrLf & vbCrLf &
+                           AppShortcutsFolder & vbCrLf & vbCrLf &
+                           "Shortcuts from a previous run in that folder are replaced. This can take a minute.",
+                           "Create App Shortcuts", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) <> DialogResult.OK Then
+            Return
+        End If
+
+        Dim result = Await RunAppShortcutsScriptAsync()
+        If IsDisposed Then Return
+        If Not result.Ok Then
+            MessageBox.Show(result.ErrorText, "Create App Shortcuts", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        Try
+            Process.Start("explorer.exe", """" & AppShortcutsFolder & """")
+        Catch ex As Exception
+            MessageBox.Show("The shortcuts were created in:" & vbCrLf & AppShortcutsFolder & vbCrLf & vbCrLf &
+                            "but File Explorer could not be opened: " & ex.Message,
+                            "Create App Shortcuts", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End Try
+
+        If result.Failed > 0 Then
+            MessageBox.Show($"{result.Failed} app(s) could not get a shortcut. The rest were created in:" & vbCrLf & AppShortcutsFolder,
+                            "Create App Shortcuts", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Runs Create-AppShortcuts.ps1 hidden, building <see cref="AppShortcutsFolder"/> with a shortcut
+    ''' to every app in Windows' All Apps list. The Create App Shortcuts button is disabled while it
+    ''' runs. Ok is False (with ErrorText set) when the script is missing or fails; Failed is the
+    ''' number of apps that couldn't get a shortcut.
+    ''' </summary>
+    Private Async Function RunAppShortcutsScriptAsync() As Task(Of (Ok As Boolean, ErrorText As String, Failed As Integer))
+        Dim scriptPath As String = IO.Path.Combine(Application.StartupPath, "Create-AppShortcuts.ps1")
+        If Not IO.File.Exists(scriptPath) Then
+            Return (False, "Create-AppShortcuts.ps1 was not found next to ProgramManager.exe:" & vbCrLf & vbCrLf & scriptPath, 0)
+        End If
+
+        Dim startInfo As New ProcessStartInfo(
+            IO.Path.Combine(Environment.SystemDirectory, "WindowsPowerShell\v1.0\powershell.exe")) With {
+            .UseShellExecute = False,
+            .CreateNoWindow = True,
+            .RedirectStandardOutput = True,
+            .RedirectStandardError = True
+        }
+        For Each arg As String In {"-NoProfile", "-ExecutionPolicy", "Bypass", "-File", scriptPath, "-Destination", AppShortcutsFolder}
+            startInfo.ArgumentList.Add(arg)
+        Next
+
+        Dim buttonText As String = btnCreateAppShortcuts.Text
+        btnCreateAppShortcuts.Enabled = False
+        btnCreateAppShortcuts.Text = "Creating Shortcuts..."
+        UseWaitCursor = True
+        Dim output As String = ""
+        Dim errors As String = ""
+        Dim exitCode As Integer
+        Try
+            Using proc As Process = Process.Start(startInfo)
+                ' Read both streams while waiting so a full pipe can't stall the script.
+                Dim outputTask = proc.StandardOutput.ReadToEndAsync()
+                Dim errorTask = proc.StandardError.ReadToEndAsync()
+                Await proc.WaitForExitAsync()
+                output = Await outputTask
+                errors = Await errorTask
+                exitCode = proc.ExitCode
+            End Using
+        Catch ex As Exception
+            Return (False, "Could not run PowerShell." & vbCrLf & vbCrLf & ex.Message, 0)
+        Finally
+            If Not IsDisposed Then
+                UseWaitCursor = False
+                btnCreateAppShortcuts.Text = buttonText
+                btnCreateAppShortcuts.Enabled = True
+            End If
+        End Try
+
+        If exitCode <> 0 OrElse Not IO.Directory.Exists(AppShortcutsFolder) Then
+            Dim detail As String = If(errors.Trim() <> "", errors.Trim(), output.Trim())
+            If detail.Length > 1500 Then detail = detail.Substring(0, 1500) & "..."
+            Return (False, "The shortcut script failed." & vbCrLf & vbCrLf & detail, 0)
+        End If
+
+        ' The script ends with "N failed" when some apps couldn't get a shortcut.
+        Dim failed As Match = Regex.Match(output, "^(\d+) failed", RegexOptions.Multiline)
+        Return (True, "", If(failed.Success, Integer.Parse(failed.Groups(1).Value), 0))
+    End Function
+
+    ' --- First run ---
+
+    ''' <summary>
+    ''' On the very first run (no layout file at startup): builds the All Apps shortcuts folder
+    ''' and puts a link to it on the first tab, and offers to start Program Manager with Windows.
+    ''' The script runs in the background while the Startup question is on screen.
+    ''' </summary>
+    Private Async Sub frmMain_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        If Not isFirstRun Then Return
+        isFirstRun = False
+
+        Dim scriptTask = RunAppShortcutsScriptAsync()
+        OfferStartupShortcut()
+
+        Dim result = Await scriptTask
+        If IsDisposed Then Return
+        If Not result.Ok Then
+            MessageBox.Show("Program Manager couldn't create the All Apps shortcuts folder." & vbCrLf & vbCrLf &
+                            result.ErrorText & vbCrLf & vbCrLf &
+                            "You can try again later with Create App Shortcuts... on the All Links tab.",
+                            "Program Manager", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Dim pages As List(Of TabPage) = GridTabPages()
+        If pages.Count = 0 Then Return
+        Dim cell As Panel = FindFirstEmptyCell(GridOf(pages(0)))
+        If cell Is Nothing Then Return
+        PlaceIconInCell(cell, AppShortcutsFolder)
+        ApplyTheme()   ' the new icon's label starts with light-theme colors
+        SaveLayout()
+        RefreshAllLinksList()
+        RefreshTabList()
+    End Sub
+
+    ''' <summary>
+    ''' Asks whether to add a Program Manager shortcut to the user's Startup folder (shell:startup)
+    ''' so it starts at sign-in. Skipped when that shortcut already exists.
+    ''' </summary>
+    Private Sub OfferStartupShortcut()
+        Dim lnkPath As String = IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Startup), "Program Manager.lnk")
+        If IO.File.Exists(lnkPath) Then Return
+
+        If MessageBox.Show("Start Program Manager automatically when you sign in to Windows?" & vbCrLf & vbCrLf &
+                           "This adds a shortcut to your Startup folder (shell:startup). " &
+                           "You can delete it from there at any time.",
+                           "Program Manager", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
+            Return
+        End If
+
+        Try
+            ShellShortcut.Create(lnkPath, Environment.ProcessPath, Application.StartupPath, "Program Manager")
+        Catch ex As Exception
+            MessageBox.Show("Could not add Program Manager to the Startup folder." & vbCrLf & vbCrLf & ex.Message,
+                            "Program Manager", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End Try
     End Sub
 
     Private Sub ApplyTheme()

@@ -129,6 +129,27 @@ If you move to another row, leave the All Links tab, or close the app with unsav
 
 ---
 
+## Creating App Shortcuts
+
+- On the All Links tab, click **Create App Shortcuts...** (next to the theme button) and confirm.
+- Program Manager runs the bundled `Create-AppShortcuts.ps1` script, which creates a shortcut to every app in the Windows **All Apps** list, including Microsoft Store apps, in `Documents\All Apps Shortcuts`. Each shortcut shows the app's real icon.
+- When it finishes, the folder opens in File Explorer. Drag any of the shortcuts onto a grid cell to add them to Program Manager.
+- Running it again replaces the shortcuts in that folder with a fresh set. Other files in the folder are left alone.
+- The script must be next to `ProgramManager.exe`; it is included in the release zip and the build output.
+
+---
+
+## First Run
+
+The very first time Program Manager starts (when there is no `ProgramManagerLayout.xml` next to the `.exe` yet), it does a one-time setup:
+
+- It asks whether to start Program Manager automatically when you sign in. Choosing **Yes** adds a `Program Manager.lnk` shortcut to your Startup folder (`shell:startup`); delete it from there to undo. The question is skipped if that shortcut already exists.
+- In the background, it runs **Create App Shortcuts** and, when that finishes, places a link to `Documents\All Apps Shortcuts` in the first free cell of the first tab.
+
+If the shortcut script fails, a message explains why and you can run it later from the All Links tab. The setup never runs again once a layout file exists, so upgrading or copying an existing folder doesn't trigger it.
+
+---
+
 ## Roll-Up (Minimize to Title Bar)
 
 - **Double-click the title bar** to collapse the window down to just the title bar.
