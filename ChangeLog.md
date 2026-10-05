@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-05 (after v1.2.0)
+
+### Changed - Release Script
+- `Release.ps1` now shows gh's own error output when `gh release create` fails, instead of only "gh release create failed".
+- If gh reports a failure but the release exists on GitHub with its zip attached (as happened with v1.2.0), the script warns and carries on instead of stopping. On a real failure the local zip is kept.
+- The script stops before building or pushing anything if a release for that version already exists.
+
 ## 2026-10-05
 
 ### Added - Create App Shortcuts
