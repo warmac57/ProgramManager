@@ -14,6 +14,9 @@
 - At the same time it runs `Create-AppShortcuts.ps1` in the background and, when it finishes, links `Documents\All Apps Shortcuts` in the first free cell of the first tab and saves the layout. A failure is reported and points to the button on the All Links tab.
 - Existing installs (layout file present) never see the setup.
 
+### Fixed
+- A new install's 9th tab was named "eMails" (left over from the original fixed tab set); it is now "Tab 9". Saved layouts keep their own tab names.
+
 ## 2026-10-04 (after v1.1.0)
 
 ### Changed - Retargeted to .NET 10

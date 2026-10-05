@@ -91,9 +91,9 @@ Public Class frmMain
     Private Const GridColumns As Integer = 4
     Private Const GridRows As Integer = 4
 
-    ' Tabs created when there is no layout file yet (matches the original fixed tab set).
+    ' Tabs created when there is no layout file yet (same count as the original fixed tab set).
     Private ReadOnly DefaultTabNames() As String =
-        {"Tab 1", "Tab 2", "Tab 3", "Tab 4", "Tab 5", "Tab 6", "Tab 7", "Tab 8", "eMails", "Tab 10"}
+        {"Tab 1", "Tab 2", "Tab 3", "Tab 4", "Tab 5", "Tab 6", "Tab 7", "Tab 8", "Tab 9", "Tab 10"}
 
     ' Set when the layout file exists but could not be read. Saving is then skipped
     ' for the session so a failed load can never overwrite the user's real layout.
