@@ -8,6 +8,12 @@
 - `Create-AppShortcuts.ps1` is part of the project and is copied to the build output and the publish folder, so it ships in the release zip. It takes an optional `-Destination` and `-OpenFolder` when run by hand.
 - The button is disabled with a wait cursor while the script runs; a missing script, a PowerShell error, or apps that couldn't get a shortcut are reported in a message.
 
+### Added - First-Run Setup
+- When there is no `ProgramManagerLayout.xml` at startup, Program Manager runs a one-time setup once the window is shown.
+- It asks whether to add `Program Manager.lnk` to the Startup folder (`shell:startup`) so the app starts at sign-in; skipped if that shortcut already exists. The shortcut is written with the shell's IShellLink COM object (new `ShellShortcut.vb`).
+- At the same time it runs `Create-AppShortcuts.ps1` in the background and, when it finishes, links `Documents\All Apps Shortcuts` in the first free cell of the first tab and saves the layout. A failure is reported and points to the button on the All Links tab.
+- Existing installs (layout file present) never see the setup.
+
 ## 2026-10-04 (after v1.1.0)
 
 ### Changed - Retargeted to .NET 10

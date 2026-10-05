@@ -139,6 +139,17 @@ If you move to another row, leave the All Links tab, or close the app with unsav
 
 ---
 
+## First Run
+
+The very first time Program Manager starts (when there is no `ProgramManagerLayout.xml` next to the `.exe` yet), it does a one-time setup:
+
+- It asks whether to start Program Manager automatically when you sign in. Choosing **Yes** adds a `Program Manager.lnk` shortcut to your Startup folder (`shell:startup`); delete it from there to undo. The question is skipped if that shortcut already exists.
+- In the background, it runs **Create App Shortcuts** and, when that finishes, places a link to `Documents\All Apps Shortcuts` in the first free cell of the first tab.
+
+If the shortcut script fails, a message explains why and you can run it later from the All Links tab. The setup never runs again once a layout file exists, so upgrading or copying an existing folder doesn't trigger it.
+
+---
+
 ## Roll-Up (Minimize to Title Bar)
 
 - **Double-click the title bar** to collapse the window down to just the title bar.
