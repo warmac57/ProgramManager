@@ -37,6 +37,8 @@ Public Class frmMain
 
     Private Const SHGFI_ICON As UInteger = &H100
     Private Const SHGFI_LARGEICON As UInteger = &H0
+    Private Const SHGFI_USEFILEATTRIBUTES As UInteger = &H10
+    Private Const FILE_ATTRIBUTE_NORMAL As UInteger = &H80
 
     ' Path to the layout file stored next to the executable.
     Private ReadOnly LayoutFilePath As String =
@@ -59,6 +61,10 @@ Public Class frmMain
     Private mnuEditNote As New ToolStripMenuItem("Edit Note...")
     Private mnuToggleHidden As New ToolStripMenuItem("Hide Folder")
     Private mnuRemove As New ToolStripMenuItem("Remove")
+    Private mnuRefreshPreview As New ToolStripMenuItem("Refresh Preview")
+    Private mnuChooseImage As New ToolStripMenuItem("Choose Image...")
+    Private mnuPasteImage As New ToolStripMenuItem("Paste Image")
+    Private mnuPreviewSeparator As New ToolStripSeparator()
     Private contextTarget As PictureBox = Nothing
 
     ' --- Right-click menu on the tab headers (add / rename / move / delete tabs) ---
@@ -150,10 +156,17 @@ Public Class frmMain
         AddHandler mnuEditNote.Click, AddressOf MnuEditNote_Click
         AddHandler mnuToggleHidden.Click, AddressOf MnuToggleHidden_Click
         AddHandler mnuRemove.Click, AddressOf MnuRemove_Click
+        AddHandler mnuRefreshPreview.Click, Sub() If contextTarget IsNot Nothing Then FetchPreview(contextTarget, True)
+        AddHandler mnuChooseImage.Click, AddressOf MnuChooseImage_Click
+        AddHandler mnuPasteImage.Click, AddressOf MnuPasteImage_Click
 
         IconContextMenu.Items.Add(mnuOpenFolder)
         IconContextMenu.Items.Add(mnuEditNote)
         IconContextMenu.Items.Add(mnuToggleHidden)
+        IconContextMenu.Items.Add(mnuPreviewSeparator)
+        IconContextMenu.Items.Add(mnuRefreshPreview)
+        IconContextMenu.Items.Add(mnuChooseImage)
+        IconContextMenu.Items.Add(mnuPasteImage)
         IconContextMenu.Items.Add(New ToolStripSeparator())
         IconContextMenu.Items.Add(mnuRemove)
 
@@ -1136,6 +1149,7 @@ Public Class frmMain
     End Function
 
     Private Shared Function DefaultDisplayName(filePath As String) As String
+        If LinkPreview.IsWebUrl(filePath) Then Return LinkPreview.SiteName(filePath)
         ' GetFileNameWithoutExtension works correctly even for missing paths and folders.
         If IO.Directory.Exists(filePath) Then Return IO.Path.GetFileName(filePath)
         Dim name As String = IO.Path.GetFileNameWithoutExtension(filePath)
@@ -1213,6 +1227,8 @@ Public Class frmMain
                                                 btnLinkBrowseFolder, btnLinkRemove, btnLinkOpenFolder, btnLinkLaunch}
             c.Enabled = hasLink
         Next
+        ' A web address has no containing folder to open.
+        If hasLink AndAlso LinkPreview.IsWebUrl(editingIcon.Tag.ToString()) Then btnLinkOpenFolder.Enabled = False
 
         Dim dirty As Boolean = IsEditorDirty()
         btnLinkSave.Enabled = dirty
@@ -1306,13 +1322,14 @@ Public Class frmMain
         Dim targetPage As TabPage = SelectedEditorTab()
 
         If newPath.Length = 0 Then
-            MessageBox.Show("Enter the path of the file or folder this link opens.", "Edit Link",
+            MessageBox.Show("Enter the path of the file or folder (or the web address) this link opens.", "Edit Link",
                             MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return False
         End If
 
         Dim pathChanged As Boolean = newPath <> pb.Tag.ToString()
-        If pathChanged AndAlso Not IO.File.Exists(newPath) AndAlso Not IO.Directory.Exists(newPath) Then
+        If pathChanged AndAlso Not LinkPreview.IsWebUrl(newPath) AndAlso
+           Not IO.File.Exists(newPath) AndAlso Not IO.Directory.Exists(newPath) Then
             If MessageBox.Show("Nothing exists at this path right now:" & vbCrLf & vbCrLf & newPath & vbCrLf & vbCrLf &
                                "If it's on a drive that's unplugged, you can save it anyway; the link shows the " &
                                "warning icon until the drive is back. Save anyway?",
@@ -1417,12 +1434,12 @@ Public Class frmMain
     End Function
 
     Private Sub LinkPath_DragEnter(sender As Object, e As DragEventArgs)
-        e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.Copy, DragDropEffects.None)
+        e.Effect = If(HasExternalLinks(e.Data), DragDropEffects.Copy, DragDropEffects.None)
     End Sub
 
     Private Sub LinkPath_DragDrop(sender As Object, e As DragEventArgs)
-        Dim paths As String() = TryCast(e.Data.GetData(DataFormats.FileDrop), String())
-        If paths IsNot Nothing AndAlso paths.Length > 0 Then txtLinkPath.Text = paths(0)
+        Dim links = ExternalLinks(e.Data)
+        If links.Count > 0 Then txtLinkPath.Text = links(0).Path
     End Sub
 
     ' --- Helper: get the active tab's TableLayoutPanel (Nothing on All Links) ---
@@ -1433,8 +1450,32 @@ Public Class frmMain
 
     ' --- External File Drop (onto the form / table) ---
 
+    ''' <summary>True if a drag from outside the app carries files, folders, or a web link.</summary>
+    Private Shared Function HasExternalLinks(data As IDataObject) As Boolean
+        Return data.GetDataPresent(DataFormats.FileDrop) OrElse LinkPreview.HasDroppedUrl(data)
+    End Function
+
+    ''' <summary>
+    ''' The links a drag from outside the app carries: the dropped files and folders, or one
+    ''' web link named with the page title the browser offers (blank name if there is none).
+    ''' </summary>
+    Private Shared Function ExternalLinks(data As IDataObject) As List(Of (Path As String, Name As String))
+        Dim links As New List(Of (Path As String, Name As String))()
+        Dim files As String() = If(data.GetDataPresent(DataFormats.FileDrop),
+                                   TryCast(data.GetData(DataFormats.FileDrop), String()), Nothing)
+        If files IsNot Nothing Then
+            For Each filePath As String In files
+                links.Add((filePath, ""))
+            Next
+        Else
+            Dim url As String = LinkPreview.DroppedUrl(data)
+            If url IsNot Nothing Then links.Add((url, LinkPreview.DroppedTitle(data)))
+        End If
+        Return links
+    End Function
+
     Private Sub frmMain_DragEnter(sender As Object, e As DragEventArgs) Handles Me.DragEnter
-        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+        If HasExternalLinks(e.Data) Then
             e.Effect = DragDropEffects.Copy
         Else
             e.Effect = DragDropEffects.None
@@ -1442,34 +1483,30 @@ Public Class frmMain
     End Sub
 
     Private Sub frmMain_DragDrop(sender As Object, e As DragEventArgs) Handles Me.DragDrop
-        ' Only handle external file drops here; internal moves are handled by Cell_DragDrop.
-        If Not e.Data.GetDataPresent(DataFormats.FileDrop) Then Return
-
+        ' Only handle external file and web-link drops here; internal moves are handled by Cell_DragDrop.
         Dim tlp As TableLayoutPanel = GetActiveTableLayoutPanel()
         If tlp Is Nothing Then Return
 
-        Dim files As String() = CType(e.Data.GetData(DataFormats.FileDrop), String())
-
-        For Each filePath As String In files
+        For Each link In ExternalLinks(e.Data)
             Dim cell As Panel = FindFirstEmptyCell(tlp)
             If cell Is Nothing Then
                 MessageBox.Show("All cells are full. Remove an icon first.",
                                 "Grid Full", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Return
             End If
-            PlaceIconInCell(cell, filePath)
+            PlaceIconInCell(cell, link.Path, customName:=link.Name)
         Next
     End Sub
 
     ' --- Cell Drag-Enter / Drop (for internal moves AND external drops) ---
 
     Private Sub Cell_DragEnter(sender As Object, e As DragEventArgs)
-        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
-            ' External file drop.
-            e.Effect = DragDropEffects.Copy
-        ElseIf e.Data.GetDataPresent(GetType(Panel)) Then
+        If e.Data.GetDataPresent(GetType(Panel)) Then
             ' Internal icon move (we pass the source cell Panel).
             e.Effect = DragDropEffects.Move
+        ElseIf HasExternalLinks(e.Data) Then
+            ' External file or web-link drop.
+            e.Effect = DragDropEffects.Copy
         Else
             e.Effect = DragDropEffects.None
         End If
@@ -1506,9 +1543,9 @@ Public Class frmMain
                 sourceCell.Controls.Add(c)
             Next
 
-        ElseIf e.Data.GetDataPresent(DataFormats.FileDrop) Then
-            ' --- External file drop directly onto a cell ---
-            Dim files As String() = CType(e.Data.GetData(DataFormats.FileDrop), String())
+        ElseIf HasExternalLinks(e.Data) Then
+            ' --- External file or web-link drop directly onto a cell ---
+            Dim links = ExternalLinks(e.Data)
             If targetCell.Controls.Count > 0 Then
                 MessageBox.Show("This cell already has an icon. Drop onto an empty cell or the form background.",
                                 "Cell Occupied", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -1516,14 +1553,14 @@ Public Class frmMain
             End If
             ' Place only the first file in this cell; remaining go to empty cells.
             Dim tlp As TableLayoutPanel = GetActiveTableLayoutPanel()
-            For Each filePath As String In files
+            For Each link In links
                 If targetCell.Controls.Count = 0 Then
-                    PlaceIconInCell(targetCell, filePath)
+                    PlaceIconInCell(targetCell, link.Path, customName:=link.Name)
                 Else
                     If tlp IsNot Nothing Then
                         Dim emptyCell As Panel = FindFirstEmptyCell(tlp)
                         If emptyCell IsNot Nothing Then
-                            PlaceIconInCell(emptyCell, filePath)
+                            PlaceIconInCell(emptyCell, link.Path, customName:=link.Name)
                         End If
                     End If
                 End If
@@ -1535,18 +1572,29 @@ Public Class frmMain
 
     ''' <summary>
     ''' Creates a PictureBox with the file's associated icon and a label,
-    ''' and places it inside the given cell panel.
+    ''' and places it inside the given cell panel. Web links (a URL, or a .url file) show
+    ''' their cached preview picture, or a placeholder while the preview is fetched.
     ''' </summary>
     Private Sub PlaceIconInCell(cell As Panel, filePath As String, Optional note As String = "",
                                 Optional customName As String = "")
         Try
-            Dim isDirectory As Boolean = IO.Directory.Exists(filePath)
-            Dim isMissing As Boolean = Not isDirectory AndAlso Not IO.File.Exists(filePath)
-            Dim iconBitmap As Bitmap
+            Dim isUrl As Boolean = LinkPreview.IsWebUrl(filePath)
+            Dim isDirectory As Boolean = Not isUrl AndAlso IO.Directory.Exists(filePath)
+            Dim isMissing As Boolean = Not isUrl AndAlso Not isDirectory AndAlso Not IO.File.Exists(filePath)
+            Dim iconBitmap As Bitmap = Nothing
 
-            If isMissing Then
+            ' Web links use their preview picture; without one yet, fetch it after the icon is placed.
+            Dim webUrl As String = If(isMissing, Nothing, LinkPreview.WebUrlOf(filePath))
+            If webUrl IsNot Nothing Then iconBitmap = LinkPreview.LoadCachedImage(webUrl)
+            Dim needsPreview As Boolean = webUrl IsNot Nothing AndAlso iconBitmap Is Nothing
+
+            If iconBitmap IsNot Nothing Then
+                ' Cached preview picture.
+            ElseIf isMissing Then
                 ' File or folder no longer exists — use a generic warning icon.
                 iconBitmap = SystemIcons.Warning.ToBitmap()
+            ElseIf isUrl Then
+                iconBitmap = WebLinkPlaceholderIcon()
             ElseIf isDirectory Then
                 ' Use SHGetFileInfo to get the folder icon.
                 Dim shfi As New SHFILEINFO()
@@ -1623,6 +1671,8 @@ Public Class frmMain
             If isDirectory AndAlso Not isMissing Then
                 UpdateHiddenIndicator(iconBox)
             End If
+
+            If needsPreview Then FetchPreview(iconBox, False)
 
         Catch ex As Exception
             MessageBox.Show("Could not create an icon for: " & filePath & vbCrLf &
@@ -1714,10 +1764,9 @@ Public Class frmMain
         End If
 
         Try
-            Dim startInfo As New ProcessStartInfo(filePath) With {
-                .UseShellExecute = True,
-                .WorkingDirectory = IO.Path.GetDirectoryName(filePath)
-            }
+            Dim startInfo As New ProcessStartInfo(filePath) With {.UseShellExecute = True}
+            ' A web address opens in the default browser and has no folder to start in.
+            If Not LinkPreview.IsWebUrl(filePath) Then startInfo.WorkingDirectory = IO.Path.GetDirectoryName(filePath)
             Process.Start(startInfo)
         Catch ex As Exception
             MessageBox.Show("Could not launch the file." & vbCrLf & vbCrLf &
@@ -1903,6 +1952,105 @@ Public Class frmMain
         missingLinks.Remove(pb)
         TryCast(pb.Parent, Panel)?.Controls.Clear()
         If pb Is editingIcon Then editingIcon = Nothing
+
+        ' Drop a web link's cached preview once no other link opens the same address.
+        Dim url As String = LinkPreview.WebUrlOf(pb.Tag?.ToString())
+        If url IsNot Nothing AndAlso Not AllIcons().Any(Function(other) LinkPreview.WebUrlOf(other.Tag?.ToString()) = url) Then
+            LinkPreview.DeleteCachedImage(url)
+        End If
+    End Sub
+
+    ''' <summary>Every link (grid icon) on every grid tab.</summary>
+    Private Function AllIcons() As IEnumerable(Of PictureBox)
+        Return GridTabPages().SelectMany(Function(page) OccupiedCells(GridOf(page))).
+                              SelectMany(Function(cell) cell.Controls.OfType(Of PictureBox)())
+    End Function
+
+    ' --- Web link preview pictures (see LinkPreview.vb) ---
+
+    ''' <summary>The shell's Internet Shortcut icon, shown for a web link until its preview arrives.</summary>
+    Private Shared Function WebLinkPlaceholderIcon() As Bitmap
+        Dim shfi As New SHFILEINFO()
+        SHGetFileInfo(".url", FILE_ATTRIBUTE_NORMAL, shfi, CUInt(Marshal.SizeOf(shfi)),
+                      SHGFI_ICON Or SHGFI_LARGEICON Or SHGFI_USEFILEATTRIBUTES)
+        If shfi.hIcon = IntPtr.Zero Then Return SystemIcons.Information.ToBitmap()
+        Dim bmp As Bitmap = Icon.FromHandle(shfi.hIcon).ToBitmap()
+        DestroyIcon(shfi.hIcon)
+        Return bmp
+    End Function
+
+    ''' <summary>
+    ''' Downloads a web link's preview picture in the background and shows it when it arrives.
+    ''' reportFailure is True for the Refresh Preview command, which says so if nothing was found.
+    ''' </summary>
+    Private Async Sub FetchPreview(pb As PictureBox, reportFailure As Boolean)
+        Dim filePath As String = pb.Tag?.ToString()
+        Dim url As String = LinkPreview.WebUrlOf(filePath)
+        If url Is Nothing Then Return
+
+        Dim found As Boolean = Await LinkPreview.FetchAsync(url)
+        If pb.IsDisposed OrElse pb.Tag?.ToString() <> filePath Then Return   ' link was removed or changed meanwhile
+        If found Then
+            ShowCachedPreview(pb, url)
+        ElseIf reportFailure Then
+            MessageBox.Show("No preview picture could be found for:" & vbCrLf & vbCrLf & url & vbCrLf & vbCrLf &
+                            "The site may be offline, block automated requests, or only offer pictures in a format " &
+                            "Windows can't read (WebP, SVG). Use Choose Image... or Paste Image to set one yourself.",
+                            "Refresh Preview", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End If
+    End Sub
+
+    ''' <summary>Shows the cached preview picture on a web link's icon.</summary>
+    Private Sub ShowCachedPreview(pb As PictureBox, url As String)
+        Dim picture As Bitmap = LinkPreview.LoadCachedImage(url)
+        If picture Is Nothing Then Return
+        Dim old As Image = pb.Image
+        pb.Image = picture
+        old?.Dispose()
+    End Sub
+
+    Private Sub MnuChooseImage_Click(sender As Object, e As EventArgs)
+        Dim pb As PictureBox = contextTarget
+        Dim url As String = LinkPreview.WebUrlOf(pb?.Tag?.ToString())
+        If url Is Nothing Then Return
+
+        Using dlg As New OpenFileDialog() With {
+            .Title = "Choose a Picture for This Link",
+            .Filter = "Pictures|*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.ico|All files|*.*"
+        }
+            If dlg.ShowDialog(Me) <> DialogResult.OK Then Return
+            Try
+                Using img As Image = Image.FromFile(dlg.FileName)
+                    LinkPreview.SaveImage(url, img, Image.IsAlphaPixelFormat(img.PixelFormat))
+                End Using
+                ShowCachedPreview(pb, url)
+            Catch ex As Exception
+                MessageBox.Show("Could not use that picture." & vbCrLf & vbCrLf & ex.Message,
+                                "Choose Image", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Try
+        End Using
+    End Sub
+
+    Private Sub MnuPasteImage_Click(sender As Object, e As EventArgs)
+        Dim pb As PictureBox = contextTarget
+        Dim url As String = LinkPreview.WebUrlOf(pb?.Tag?.ToString())
+        If url Is Nothing Then Return
+
+        If Not Clipboard.ContainsImage() Then
+            MessageBox.Show("The clipboard doesn't hold a picture. Copy one first (for example with " &
+                            "Win+Shift+S, or Copy Image in your browser), then try again.",
+                            "Paste Image", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return
+        End If
+        Try
+            Using img As Image = Clipboard.GetImage()
+                LinkPreview.SaveImage(url, img, Image.IsAlphaPixelFormat(img.PixelFormat))
+            End Using
+            ShowCachedPreview(pb, url)
+        Catch ex As Exception
+            MessageBox.Show("Could not use the clipboard picture." & vbCrLf & vbCrLf & ex.Message,
+                            "Paste Image", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End Try
     End Sub
 
     Private Sub MnuEditNote_Click(sender As Object, e As EventArgs)
@@ -1930,12 +2078,7 @@ Public Class frmMain
     ''' Returns the new note text, or Nothing if cancelled.
     ''' </summary>
     Private Function ShowNoteDialog(filePath As String, currentNote As String) As String
-        Dim displayName As String
-        If IO.Directory.Exists(filePath) Then
-            displayName = IO.Path.GetFileName(filePath)
-        Else
-            displayName = IO.Path.GetFileNameWithoutExtension(filePath)
-        End If
+        Dim displayName As String = DefaultDisplayName(filePath)
 
         Dim result As String = Nothing
 
@@ -2189,6 +2332,14 @@ Public Class frmMain
         End If
 
         Dim filePath As String = contextTarget.Tag?.ToString()
+
+        ' Web links get the preview-picture commands; a bare URL has no folder to open.
+        Dim isWebLink As Boolean = LinkPreview.WebUrlOf(filePath) IsNot Nothing
+        For Each item As ToolStripItem In New ToolStripItem() {mnuPreviewSeparator, mnuRefreshPreview, mnuChooseImage, mnuPasteImage}
+            item.Visible = isWebLink
+        Next
+        mnuOpenFolder.Visible = Not LinkPreview.IsWebUrl(filePath)
+
         If filePath IsNot Nothing AndAlso IO.Directory.Exists(filePath) AndAlso IsOnDesktop(filePath) Then
             mnuToggleHidden.Visible = True
             Try

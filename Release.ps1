@@ -30,7 +30,7 @@ $ProjectFile  = "$ProjectRoot\ProgramManager.vbproj"
 $PublishDir   = "$ProjectRoot\bin\Release\net10.0-windows\publish"
 $ZipPath      = "$ProjectRoot\ProgramManager-v$Version.zip"
 $Tag          = "v$Version"
-$Exclude      = @("ProgramManagerLayout.xml", "ProgramManagerSettings.xml", "BACKUP-XML")
+$Exclude      = @("ProgramManagerLayout.xml", "ProgramManagerSettings.xml", "BACKUP-XML", "Links")
 
 function Step($label) { Write-Host "`n==> $label" -ForegroundColor Cyan }
 function Ok($label)   { Write-Host "    OK: $label" -ForegroundColor Green }
@@ -98,6 +98,7 @@ $Message
 - **Drag and drop** - Drop files and folders from Explorer onto any grid cell
 - **Icon rearrangement** - Drag icons between cells to swap positions
 - **File and folder support** - Shortcuts to both files and folders with proper Windows icons
+- **Web links with preview pictures** - Drag a link from your browser onto a cell; it shows the page's preview picture (or the site's icon), cached in a Links folder
 - **Launch on double-click** - Open any shortcut directly from the grid or the All Links list
 - **Icon notes** - Attach a free-text note to any shortcut via right-click; a green check badge appears on the icon when a note exists
 - **Tab management** - Add, rename, reorder, and delete tabs from the All Links tab or by right-clicking a tab header

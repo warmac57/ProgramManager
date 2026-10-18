@@ -9,6 +9,7 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 - **Drag and drop** - Drop files and folders from Explorer onto any grid cell
 - **Icon rearrangement** - Drag icons between cells to swap positions
 - **File and folder support** - Shortcuts to both files and folders with proper Windows icons
+- **Web links with preview pictures** - Drag a link or the address bar from your browser onto a cell (or type a URL in the link editor). The link shows the page's preview picture, like a bookmark manager, falling back to the site's icon. Pictures are cached in a `Links` folder next to the exe, and you can refresh one or set your own from the right-click menu
 - **Launch on double-click** - Open any shortcut directly from the grid or the All Links list
 - **Icon notes** - Attach a free-text note to any shortcut via right-click; a green ✓ badge appears on the icon when a note exists; notes are saved to XML and visible in the All Links tab
 - **Tab management** - Add, rename, reorder, and delete tabs from the All Links tab list or by right-clicking a tab header; deleting a tab moves its links to another tab (or deletes them after confirmation)
@@ -51,7 +52,7 @@ The app isn't code-signed, so the first time you run it Windows SmartScreen may 
 
 ### Updating
 
-Download the newest zip and extract it over your existing folder, replacing the files. Release zips never contain `ProgramManagerLayout.xml`, `ProgramManagerSettings.xml`, or `BACKUP-XML`, so your tabs, links, and settings are kept.
+Download the newest zip and extract it over your existing folder, replacing the files. Release zips never contain `ProgramManagerLayout.xml`, `ProgramManagerSettings.xml`, `BACKUP-XML`, or `Links`, so your tabs, links, and settings are kept.
 
 ## Building from Source
 
