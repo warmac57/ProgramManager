@@ -597,6 +597,7 @@ Public Class frmMain
         End If
 
         Dim linkCells As List(Of Panel) = OccupiedCells(grid)
+        Dim deletedUrls As New HashSet(Of String)()   ' web links deleted with the tab, whose pictures may now be unused
         Dim moveTarget As TabPage = Nothing
 
         If linkCells.Count = 0 Then
@@ -638,6 +639,8 @@ Public Class frmMain
                     iconNotes.Remove(pb)
                     iconNames.Remove(pb)
                     missingLinks.Remove(pb)
+                    Dim url As String = LinkPreview.WebUrlOf(pb.Tag?.ToString())
+                    If url IsNot Nothing Then deletedUrls.Add(url)
                 Next
             End If
         Next
@@ -651,6 +654,11 @@ Public Class frmMain
         Finally
             tabChangeDepth -= 1
         End Try
+
+        ' The tab is gone now, so only links on other tabs can still be using these pictures.
+        For Each url As String In deletedUrls
+            DeleteUnusedPreview(url)
+        Next
         AfterTabsChanged(moveTarget)
     End Sub
 
@@ -1953,9 +1961,13 @@ Public Class frmMain
         TryCast(pb.Parent, Panel)?.Controls.Clear()
         If pb Is editingIcon Then editingIcon = Nothing
 
-        ' Drop a web link's cached preview once no other link opens the same address.
         Dim url As String = LinkPreview.WebUrlOf(pb.Tag?.ToString())
-        If url IsNot Nothing AndAlso Not AllIcons().Any(Function(other) LinkPreview.WebUrlOf(other.Tag?.ToString()) = url) Then
+        If url IsNot Nothing Then DeleteUnusedPreview(url)
+    End Sub
+
+    ''' <summary>Deletes a web address's cached preview picture once no link on any tab opens that address.</summary>
+    Private Sub DeleteUnusedPreview(url As String)
+        If Not AllIcons().Any(Function(other) LinkPreview.WebUrlOf(other.Tag?.ToString()) = url) Then
             LinkPreview.DeleteCachedImage(url)
         End If
     End Sub
@@ -1989,7 +2001,11 @@ Public Class frmMain
         If url Is Nothing Then Return
 
         Dim found As Boolean = Await LinkPreview.FetchAsync(url)
-        If pb.IsDisposed OrElse pb.Tag?.ToString() <> filePath Then Return   ' link was removed or changed meanwhile
+        If pb.IsDisposed OrElse pb.Parent Is Nothing OrElse pb.Tag?.ToString() <> filePath Then
+            ' The link was removed or changed while downloading; don't leave its picture behind.
+            If found Then DeleteUnusedPreview(url)
+            Return
+        End If
         If found Then
             ShowCachedPreview(pb, url)
         ElseIf reportFailure Then

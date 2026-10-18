@@ -5,7 +5,7 @@
 ### Added - Web Links with Preview Pictures
 - Grid cells can now hold web addresses. Drag a link or the address bar from Chrome, Edge, or Firefox onto a cell, or type a `https://` address into the link editor's Path box. The page title the browser supplies becomes the link name; otherwise the site name is shown.
 - Web links (and dropped `.url` files) show a preview picture like a bookmark manager does: the page's `og:image` / `twitter:image`, else its apple-touch-icon or largest declared icon, else `/favicon.ico`. It is fetched in the background (at most 4 at once, 15 s timeout) and the Internet Shortcut icon is shown meanwhile.
-- Pictures are shrunk to at most 480x320 and cached in a new `Links` folder next to the exe (JPG for previews, PNG for icons), named from a hash of the address, so each is only downloaded once. Removing a link deletes its picture unless another link uses the same address. The layout XML is unchanged.
+- Pictures are shrunk to at most 480x320 and cached in a new `Links` folder next to the exe (JPG for previews, PNG for icons), named from a hash of the address, so each is only downloaded once. Removing a link, or deleting a tab along with its links, deletes its picture unless another link uses the same address. A picture that finishes downloading after its link was removed or changed is deleted too. The layout XML is unchanged.
 - New right-click commands for web links: **Refresh Preview**, **Choose Image...**, and **Paste Image**.
 - Web addresses are never marked as missing, open in the default browser, and hide **Open Containing Folder** (menu and editor button).
 - New `LinkPreview.vb` holds the URL detection, browser drop parsing, page and image download, and the picture cache.

@@ -41,7 +41,7 @@ A cell can hold a web address as well as a file or folder.
 Like a bookmark manager, Program Manager shows a picture for each web link instead of a plain icon:
 
 - It downloads the page in the background and uses the page's **preview image** (the `og:image` or `twitter:image` the site provides for link previews). If there isn't one, it uses the site's own **icon**. Until a picture arrives, the standard Internet Shortcut icon is shown.
-- Pictures are saved in the **Links** folder next to the executable (named from the web address), so each one is only downloaded once and still shows when you're offline. Removing a link deletes its picture unless another link uses the same address.
+- Pictures are saved in the **Links** folder next to the executable (named from the web address), so each one is only downloaded once and still shows when you're offline. Removing a link, or deleting a tab along with its links, deletes the picture unless another link uses the same address.
 - Some sites offer no picture, block automated requests, or only use formats Windows can't read (WebP, SVG). Those keep the Internet Shortcut icon, or get a smaller site icon.
 
 Right-click a web link for these extra commands:
