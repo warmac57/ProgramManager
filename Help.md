@@ -23,6 +23,34 @@ The window holds as many grid tabs as you like, followed by the **All Links** ta
 - Dropping onto the **tab background** (not a specific cell) places the shortcut in the first available empty cell.
 - Dropping **multiple files** at once fills cells in order from the first empty cell.
 - Both **files and folders** are supported. Folders display the Windows folder icon.
+- **Web links** are supported too - see [Web Links](#web-links) below.
+
+---
+
+## Web Links
+
+A cell can hold a web address as well as a file or folder.
+
+- **Drag a link** from a web page, or the **address bar** (the padlock icon), from Chrome, Edge, or Firefox onto a cell. The page title the browser offers becomes the link's name; otherwise the site name (such as `oilprice.com`) is shown.
+- You can also type or paste a `https://...` address into the **Path** box of the link editor on the All Links tab.
+- Saved Internet Shortcut (`.url`) files dropped from Explorer get a preview picture too.
+- Double-clicking a web link opens it in your default browser.
+
+### Preview Pictures
+
+Like a bookmark manager, Program Manager shows a picture for each web link instead of a plain icon:
+
+- It downloads the page in the background and uses the page's **preview image** (the `og:image` or `twitter:image` the site provides for link previews). If there isn't one, it uses the site's own **icon**. Until a picture arrives, the standard Internet Shortcut icon is shown.
+- Pictures are saved in the **Links** folder next to the executable (named from the web address), so each one is only downloaded once and still shows when you're offline. Removing a link, or deleting a tab along with its links, deletes the picture unless another link uses the same address.
+- Some sites offer no picture, block automated requests, or only use formats Windows can't read (WebP, SVG). Those keep the Internet Shortcut icon, or get a smaller site icon.
+
+Right-click a web link for these extra commands:
+
+- **Refresh Preview** - Downloads the picture again (for example after the site changed it). Says so if nothing could be found.
+- **Choose Image...** - Use a picture file of your own (JPG, PNG, GIF, BMP, or ICO).
+- **Paste Image** - Use a picture from the clipboard, for example a snip taken with `Win+Shift+S` or one copied with **Copy Image** in your browser.
+
+**Open Containing Folder** isn't shown for web addresses, since they have no folder.
 
 ---
 
@@ -45,10 +73,11 @@ The window holds as many grid tabs as you like, followed by the **All Links** ta
 
 Right-click any icon to see:
 
-- **Open Containing Folder** - Opens Windows Explorer with the file or folder selected.
+- **Open Containing Folder** - Opens Windows Explorer with the file or folder selected (not shown for web addresses).
 - **Edit Note...** - Opens a small dialog to add or edit a free-text note for this shortcut (see below).
 - **Hide Folder / Unhide Folder** - Only appears for folders located on the desktop. Toggles the Windows Hidden attribute on the folder (see below).
 - **Remove** - Removes the shortcut from the grid (saved right away). This does not delete the actual file or folder.
+- **Refresh Preview / Choose Image... / Paste Image** - Only appear for web links (see [Web Links](#web-links)).
 
 ---
 
@@ -164,7 +193,7 @@ All settings are saved automatically when the application closes:
 - **ProgramManagerLayout.xml** - Stores all shortcut positions, tab names, notes, custom link names, and the dark mode preference.
 - **ProgramManagerSettings.xml** - Stores window size, position, and state.
 
-Both files are saved in the same directory as the application executable.
+Both files are saved in the same directory as the application executable. Preview pictures for web links are kept in the **Links** subfolder.
 
 ### Automatic Backups
 

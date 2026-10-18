@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-10-18
+
+### Added - Web Links with Preview Pictures
+- Grid cells can now hold web addresses. Drag a link or the address bar from Chrome, Edge, or Firefox onto a cell, or type a `https://` address into the link editor's Path box. The page title the browser supplies becomes the link name; otherwise the site name is shown.
+- Web links (and dropped `.url` files) show a preview picture like a bookmark manager does: the page's `og:image` / `twitter:image`, else its apple-touch-icon or largest declared icon, else `/favicon.ico`. It is fetched in the background (at most 4 at once, 15 s timeout) and the Internet Shortcut icon is shown meanwhile.
+- Pictures are shrunk to at most 480x320 and cached in a new `Links` folder next to the exe (JPG for previews, PNG for icons), named from a hash of the address, so each is only downloaded once. Removing a link, or deleting a tab along with its links, deletes its picture unless another link uses the same address. A picture that finishes downloading after its link was removed or changed is deleted too. The layout XML is unchanged.
+- New right-click commands for web links: **Refresh Preview**, **Choose Image...**, and **Paste Image**.
+- Web addresses are never marked as missing, open in the default browser, and hide **Open Containing Folder** (menu and editor button).
+- New `LinkPreview.vb` holds the URL detection, browser drop parsing, page and image download, and the picture cache.
+- `Release.ps1` leaves a `Links` folder out of release zips.
+
+### Fixed - Dialog Layout
+- The Delete Tab, Edit Note, and tab name (Add Tab / Rename) dialogs now size themselves to their contents instead of using fixed positions. Text that wraps onto more lines (a long tab or link name, or a larger Windows text size) pushes the rows below it down instead of overlapping them, and buttons widen to fit their text. In the Delete Tab dialog this fixes the message overlapping the "Move them to" option and the cut-off backup note and Delete Tab button.
+- The Edit Note dialog now uses the shared dark-mode styling, like the other dialogs.
+
 ## 2026-10-05 (after v1.2.0)
 
 ### Changed - Release Script

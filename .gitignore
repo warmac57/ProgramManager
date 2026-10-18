@@ -404,6 +404,7 @@ FodyWeavers.xsd
 ProgramManagerLayout.xml
 ProgramManagerSettings.xml
 BACKUP-XML/
+Links/
 
 # Release script output
 ProgramManager-v*.zip
