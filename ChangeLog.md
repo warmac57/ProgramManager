@@ -11,8 +11,9 @@
 - New `LinkPreview.vb` holds the URL detection, browser drop parsing, page and image download, and the picture cache.
 - `Release.ps1` leaves a `Links` folder out of release zips.
 
-### Fixed - Delete Tab Dialog
-- The Delete Tab dialog now sizes itself to its contents. A message that wraps onto two lines (a long tab name, or a larger Windows text size) no longer overlaps the "Move them to" option, and the backup note and the Delete Tab button are no longer cut off.
+### Fixed - Dialog Layout
+- The Delete Tab, Edit Note, and tab name (Add Tab / Rename) dialogs now size themselves to their contents instead of using fixed positions. Text that wraps onto more lines (a long tab or link name, or a larger Windows text size) pushes the rows below it down instead of overlapping them, and buttons widen to fit their text. In the Delete Tab dialog this fixes the message overlapping the "Move them to" option and the cut-off backup note and Delete Tab button.
+- The Edit Note dialog now uses the shared dark-mode styling, like the other dialogs.
 
 ## 2026-10-05 (after v1.2.0)
 

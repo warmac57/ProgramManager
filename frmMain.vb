@@ -2100,55 +2100,32 @@ Public Class frmMain
 
         Using dlg As New Form()
             dlg.Text = "Edit Note"
-            dlg.Size = New Size(450, 270)
             dlg.FormBorderStyle = FormBorderStyle.FixedDialog
             dlg.StartPosition = FormStartPosition.CenterParent
             dlg.MaximizeBox = False
             dlg.MinimizeBox = False
 
+            Dim layout As TableLayoutPanel = NewDialogLayout(dlg, 1)
             Dim lbl As New Label() With {
                 .Text = "Note for: " & displayName,
-                .AutoSize = True,
-                .Location = New Point(12, 12)
+                .AutoSize = True, .MaximumSize = New Size(400, 0), .Margin = New Padding(0, 0, 0, 6)
             }
-
             Dim txt As New TextBox() With {
                 .Multiline = True,
                 .ScrollBars = ScrollBars.Vertical,
                 .Text = currentNote,
-                .Location = New Point(12, 38),
-                .Size = New Size(382, 110),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right Or AnchorStyles.Bottom
+                .Size = New Size(400, 110),
+                .Margin = New Padding(0, 0, 0, 12)
             }
+            Dim btnOK As New Button() With {.Text = "OK", .DialogResult = DialogResult.OK, .Size = New Size(80, 30)}
+            Dim btnCancel As New Button() With {.Text = "Cancel", .DialogResult = DialogResult.Cancel, .Size = New Size(80, 30)}
 
-            Dim btnOK As New Button() With {
-                .Text = "OK",
-                .DialogResult = DialogResult.OK,
-                .Size = New Size(80, 30),
-                .Location = New Point(234, 158)
-            }
-
-            Dim btnCancel As New Button() With {
-                .Text = "Cancel",
-                .DialogResult = DialogResult.Cancel,
-                .Size = New Size(80, 30),
-                .Location = New Point(320, 158)
-            }
-
-            dlg.Controls.AddRange({lbl, txt, btnOK, btnCancel})
+            layout.Controls.Add(lbl)
+            layout.Controls.Add(txt)
+            layout.Controls.Add(NewDialogButtonRow(btnOK, btnCancel))
             dlg.AcceptButton = btnOK
             dlg.CancelButton = btnCancel
-
-            If isDarkMode Then
-                dlg.BackColor = DarkFormBack
-                lbl.ForeColor = DarkForeColor
-                txt.BackColor = DarkControlBack
-                txt.ForeColor = DarkForeColor
-                btnOK.BackColor = DarkControlBack
-                btnOK.ForeColor = DarkForeColor
-                btnCancel.BackColor = DarkControlBack
-                btnCancel.ForeColor = DarkForeColor
-            End If
+            StyleDialog(dlg)
 
             If dlg.ShowDialog(Me) = DialogResult.OK Then
                 result = txt.Text
@@ -2167,27 +2144,24 @@ Public Class frmMain
 
         Using dlg As New Form()
             dlg.Text = title
-            dlg.ClientSize = New Size(360, 112)
             dlg.FormBorderStyle = FormBorderStyle.FixedDialog
             dlg.StartPosition = FormStartPosition.CenterParent
             dlg.MaximizeBox = False
             dlg.MinimizeBox = False
             dlg.ShowInTaskbar = False
 
-            Dim lbl As New Label() With {.Text = prompt, .AutoSize = True, .Location = New Point(12, 12)}
-            Dim txt As New TextBox() With {.Text = initialText, .Location = New Point(12, 36), .Width = 336}
-            Dim btnOK As New Button() With {
-                .Text = "OK", .DialogResult = DialogResult.OK,
-                .Size = New Size(80, 30), .Location = New Point(182, 72)
-            }
-            Dim btnCancel As New Button() With {
-                .Text = "Cancel", .DialogResult = DialogResult.Cancel,
-                .Size = New Size(80, 30), .Location = New Point(268, 72)
-            }
+            Dim layout As TableLayoutPanel = NewDialogLayout(dlg, 1)
+            Dim lbl As New Label() With {.Text = prompt, .AutoSize = True, .MaximumSize = New Size(336, 0),
+                                         .Margin = New Padding(0, 0, 0, 6)}
+            Dim txt As New TextBox() With {.Text = initialText, .Width = 336, .Margin = New Padding(0, 0, 0, 12)}
+            Dim btnOK As New Button() With {.Text = "OK", .DialogResult = DialogResult.OK, .Size = New Size(80, 30)}
+            Dim btnCancel As New Button() With {.Text = "Cancel", .DialogResult = DialogResult.Cancel, .Size = New Size(80, 30)}
             btnOK.Enabled = txt.Text.Trim().Length > 0
             AddHandler txt.TextChanged, Sub() btnOK.Enabled = txt.Text.Trim().Length > 0
 
-            dlg.Controls.AddRange({lbl, txt, btnOK, btnCancel})
+            layout.Controls.Add(lbl)
+            layout.Controls.Add(txt)
+            layout.Controls.Add(NewDialogButtonRow(btnOK, btnCancel))
             dlg.AcceptButton = btnOK
             dlg.CancelButton = btnCancel
             StyleDialog(dlg)
@@ -2215,21 +2189,8 @@ Public Class frmMain
             dlg.MaximizeBox = False
             dlg.MinimizeBox = False
             dlg.ShowInTaskbar = False
-            ' Size the dialog to its contents, so a long tab name (or a larger Windows text
-            ' size) wraps the message onto more lines instead of running into the options.
-            dlg.AutoSize = True
-            dlg.AutoSizeMode = AutoSizeMode.GrowAndShrink
 
-            Dim layout As New TableLayoutPanel() With {
-                .Location = Point.Empty,
-                .Padding = New Padding(12),
-                .AutoSize = True,
-                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                .ColumnCount = 2,
-                .RowCount = 5
-            }
-            layout.ColumnStyles.Add(New ColumnStyle(SizeType.AutoSize))
-            layout.ColumnStyles.Add(New ColumnStyle(SizeType.AutoSize))
+            Dim layout As TableLayoutPanel = NewDialogLayout(dlg, 2)
 
             Const TextWidth As Integer = 376
             Dim lbl As New Label() With {
@@ -2250,19 +2211,9 @@ Public Class frmMain
             }
             AddHandler rbMove.CheckedChanged, Sub() cboTarget.Enabled = rbMove.Checked
 
-            Dim btnOK As New Button() With {
-                .Text = "Delete Tab", .DialogResult = DialogResult.OK,
-                .AutoSize = True, .MinimumSize = New Size(96, 30), .Margin = New Padding(6, 0, 0, 0)
-            }
-            Dim btnCancel As New Button() With {
-                .Text = "Cancel", .DialogResult = DialogResult.Cancel,
-                .AutoSize = True, .MinimumSize = New Size(80, 30), .Margin = New Padding(6, 0, 0, 0)
-            }
-            Dim buttons As New FlowLayoutPanel() With {
-                .FlowDirection = FlowDirection.RightToLeft, .AutoSize = True,
-                .AutoSizeMode = AutoSizeMode.GrowAndShrink, .Anchor = AnchorStyles.Right, .Margin = Padding.Empty
-            }
-            buttons.Controls.AddRange({btnCancel, btnOK})
+            Dim btnOK As New Button() With {.Text = "Delete Tab", .DialogResult = DialogResult.OK, .Size = New Size(96, 30)}
+            Dim btnCancel As New Button() With {.Text = "Cancel", .DialogResult = DialogResult.Cancel, .Size = New Size(80, 30)}
+            Dim buttons As FlowLayoutPanel = NewDialogButtonRow(btnOK, btnCancel)
 
             layout.Controls.Add(lbl, 0, 0)
             layout.SetColumnSpan(lbl, 2)
@@ -2276,7 +2227,6 @@ Public Class frmMain
             layout.SetColumnSpan(buttons, 2)
 
             ' No AcceptButton: Enter shouldn't delete anything.
-            dlg.Controls.Add(layout)
             dlg.CancelButton = btnCancel
             StyleDialog(dlg)
             dlg.ActiveControl = btnCancel
@@ -2294,6 +2244,50 @@ Public Class frmMain
                                    "Delete Tab", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                                    MessageBoxDefaultButton.Button2) = DialogResult.Yes
         End Using
+    End Function
+
+    ''' <summary>
+    ''' Makes a runtime-built dialog size itself to an auto-sizing grid that its controls go
+    ''' in, one row each, so text that wraps (a long name, or a larger Windows text size)
+    ''' pushes the rows below it down instead of overlapping them.
+    ''' </summary>
+    Private Shared Function NewDialogLayout(dlg As Form, columnCount As Integer) As TableLayoutPanel
+        dlg.AutoSize = True
+        dlg.AutoSizeMode = AutoSizeMode.GrowAndShrink
+
+        Dim layout As New TableLayoutPanel() With {
+            .Location = Point.Empty,
+            .Padding = New Padding(12),
+            .AutoSize = True,
+            .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            .ColumnCount = columnCount
+        }
+        For i As Integer = 1 To columnCount
+            layout.ColumnStyles.Add(New ColumnStyle(SizeType.AutoSize))
+        Next
+        dlg.Controls.Add(layout)
+        Return layout
+    End Function
+
+    ''' <summary>
+    ''' A right-aligned row of dialog buttons, shown left to right in the order given. Each
+    ''' keeps its set size as a minimum and widens if its text needs more room.
+    ''' </summary>
+    Private Shared Function NewDialogButtonRow(ParamArray buttons As Button()) As FlowLayoutPanel
+        Dim row As New FlowLayoutPanel() With {
+            .FlowDirection = FlowDirection.RightToLeft,
+            .AutoSize = True,
+            .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            .Anchor = AnchorStyles.Right,
+            .Margin = Padding.Empty
+        }
+        For Each btn As Button In buttons.Reverse()
+            btn.MinimumSize = btn.Size
+            btn.AutoSize = True
+            btn.Margin = New Padding(6, 0, 0, 0)
+            row.Controls.Add(btn)
+        Next
+        Return row
     End Function
 
     ''' <summary>Applies the dark theme to a runtime-built dialog (no-op in light mode).</summary>
