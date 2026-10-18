@@ -132,10 +132,10 @@ No installer required. All settings are stored next to the executable.
 
 ## Getting Started
 
-1. Drag files or folders from Windows Explorer onto any cell in a grid tab
-2. Double-click an icon to launch it
+1. Drag files or folders from Windows Explorer onto any cell in a grid tab, or drag a link (or the address bar) from your browser to add a web link with a preview picture
+2. Double-click an icon to launch it (web links open in your default browser)
 3. Drag icons between cells to rearrange
-4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove)
+4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove; web links also get Refresh Preview, Choose Image, and Paste Image)
 5. Use the **All Links** tab to edit links, manage tabs, restore a backup, toggle dark mode, and set the screenshot folder
 "@
 

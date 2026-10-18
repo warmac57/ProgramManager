@@ -4,6 +4,7 @@
 
 ### Changed - Release Script
 - `Release.ps1` now accepts the version with or without a leading "v" (`-Version 1.3.0` or `-Version v1.3.0`). It adds the "v" to the tag and zip name itself, so passing `v1.3.0` used to produce the tag `vv1.3.0`.
+- The release notes template's Getting Started steps now cover web links: dragging links from the browser, opening them in the default browser, and the Refresh Preview / Choose Image / Paste Image commands.
 
 ## 2026-10-18
 
