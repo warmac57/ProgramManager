@@ -1,6 +1,6 @@
 # Program Manager
 
-A lightweight Windows desktop utility for organizing shortcuts to programs, files, and folders in a tabbed grid interface. Built with VB.NET and Windows Forms (.NET 10).
+A lightweight Windows desktop utility for organizing shortcuts to programs, files, folders, and web pages in a tabbed grid interface. Built with VB.NET and Windows Forms (.NET 10).
 Desktop Folders can be created and loaded into the grid, and then the hidden file attribute set to hide so they no longer appear on the desktop. This is provided as an extended feature to clean up the desktop by providing a secondary way to store files, folders, and links that may otherwise appear on the desktop. Also note that this is a roll-up form by double clicking on the header.
 
 ## Features
@@ -70,10 +70,10 @@ dotnet run
 
 ### Usage
 
-1. Drag files or folders from Windows Explorer onto any cell in a grid tab.
-2. Double-click an icon to launch it.
+1. Drag files or folders from Windows Explorer onto any cell in a grid tab, or drag a link (or the address bar) from your browser to add a web link with a preview picture.
+2. Double-click an icon to launch it (web links open in your default browser).
 3. Drag icons between cells to rearrange.
-4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove).
+4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove; web links also get Refresh Preview, Choose Image, and Paste Image).
 5. Use the All Links tab to edit any link (select its row), add, rename, reorder, and delete tabs, restore a backup, toggle dark mode, set the screenshot save folder, and view all shortcuts with their notes in a list. Tab commands are also on the right-click menu of each tab header.
 
 For detailed feature documentation, see [Help.md](Help.md).
@@ -87,14 +87,23 @@ All data is stored in the application directory (portable, no registry or AppDat
 | `ProgramManagerLayout.xml` | Shortcut positions, tab names, icon notes, custom link names, dark mode preference, screenshot save folder |
 | `ProgramManagerSettings.xml` | Window size, position, and state |
 | `BACKUP-XML/` | Timestamped backups of both XML files (last 10 per file) |
+| `Links/` | Cached preview pictures for web links (JPG/PNG, named from a hash of each address); deleting a picture just makes it download again |
 
-> **Note:** The XML data files and `BACKUP-XML/` folder are excluded from source control via `.gitignore` since they contain local file paths.
+> **Note:** The XML data files and the `BACKUP-XML/` and `Links/` folders are excluded from source control via `.gitignore` since they contain local data.
 
 ## Multiple Instances
 
 Copy the entire application folder to a new location to run independent instances. Each copy maintains its own settings and shortcuts.
 
 ## Recent Changes
+
+### 2026-10-18
+
+- Web links: drag a link or the address bar from Chrome, Edge, or Firefox onto a cell, or type a `https://` address in the link editor; web links open in your default browser
+- Web links show the page's preview picture (its `og:image`), falling back to the site's icon, fetched in the background and cached in the new `Links` folder
+- Right-click a web link to **Refresh Preview**, **Choose Image...**, or **Paste Image**
+- Cached pictures are deleted when their last link is removed, including when a tab is deleted with its links
+- The Delete Tab, Edit Note, and Add/Rename Tab dialogs now size themselves to their contents, so wrapped text no longer overlaps the options below it
 
 ### 2026-10-03
 
