@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18 (after v1.3.0)
+
+### Changed - Release Script
+- `Release.ps1` now accepts the version with or without a leading "v" (`-Version 1.3.0` or `-Version v1.3.0`). It adds the "v" to the tag and zip name itself, so passing `v1.3.0` used to produce the tag `vv1.3.0`.
+
 ## 2026-10-18
 
 ### Added - Web Links with Preview Pictures

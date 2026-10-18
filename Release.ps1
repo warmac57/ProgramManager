@@ -3,7 +3,8 @@
     Publishes a new ProgramManager release to GitHub.
 
 .PARAMETER Version
-    The version number for this release (e.g. 1.0.1).
+    The version number for this release (e.g. 1.0.1). A leading "v" (v1.0.1) is accepted
+    and dropped, since the script adds the "v" to the tag and zip name itself.
 
 .PARAMETER Message
     The git commit message for this release.
@@ -21,6 +22,9 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+
+# The tag and zip name add their own "v", so -Version v1.3.0 must not become vv1.3.0.
+$Version = $Version.Trim() -replace '^[vV]', ''
 
 # Refresh PATH so tools installed in the current session (e.g. gh) are found
 $env:Path = [System.Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path','User')
