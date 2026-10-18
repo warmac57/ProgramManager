@@ -11,6 +11,9 @@
 - New `LinkPreview.vb` holds the URL detection, browser drop parsing, page and image download, and the picture cache.
 - `Release.ps1` leaves a `Links` folder out of release zips.
 
+### Fixed - Delete Tab Dialog
+- The Delete Tab dialog now sizes itself to its contents. A message that wraps onto two lines (a long tab name, or a larger Windows text size) no longer overlaps the "Move them to" option, and the backup note and the Delete Tab button are no longer cut off.
+
 ## 2026-10-05 (after v1.2.0)
 
 ### Changed - Release Script

@@ -2210,39 +2210,73 @@ Public Class frmMain
                                          ByRef moveTarget As TabPage) As Boolean
         Using dlg As New Form()
             dlg.Text = "Delete Tab"
-            dlg.ClientSize = New Size(400, 176)
             dlg.FormBorderStyle = FormBorderStyle.FixedDialog
             dlg.StartPosition = FormStartPosition.CenterParent
             dlg.MaximizeBox = False
             dlg.MinimizeBox = False
             dlg.ShowInTaskbar = False
+            ' Size the dialog to its contents, so a long tab name (or a larger Windows text
+            ' size) wraps the message onto more lines instead of running into the options.
+            dlg.AutoSize = True
+            dlg.AutoSizeMode = AutoSizeMode.GrowAndShrink
 
+            Dim layout As New TableLayoutPanel() With {
+                .Location = Point.Empty,
+                .Padding = New Padding(12),
+                .AutoSize = True,
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                .ColumnCount = 2,
+                .RowCount = 5
+            }
+            layout.ColumnStyles.Add(New ColumnStyle(SizeType.AutoSize))
+            layout.ColumnStyles.Add(New ColumnStyle(SizeType.AutoSize))
+
+            Const TextWidth As Integer = 376
             Dim lbl As New Label() With {
                 .Text = $"""{page.Text}"" has {linkCount} link{If(linkCount = 1, "", "s")}. What should happen to them?",
-                .AutoSize = True, .MaximumSize = New Size(376, 0), .Location = New Point(12, 12)
+                .AutoSize = True, .MaximumSize = New Size(TextWidth, 0), .Margin = New Padding(0, 0, 0, 10)
             }
-            Dim rbMove As New RadioButton() With {.Text = "Move them to:", .AutoSize = True, .Checked = True, .Location = New Point(12, 46)}
-            Dim cboTarget As New ComboBox() With {.DropDownStyle = ComboBoxStyle.DropDownList, .Location = New Point(130, 44), .Width = 258}
+            Dim rbMove As New RadioButton() With {.Text = "Move them to:", .AutoSize = True, .Checked = True,
+                                                  .Anchor = AnchorStyles.Left, .Margin = New Padding(0, 0, 8, 4)}
+            Dim cboTarget As New ComboBox() With {.DropDownStyle = ComboBoxStyle.DropDownList, .Width = 240,
+                                                  .Margin = New Padding(0, 0, 0, 4)}
             cboTarget.Items.AddRange(others.Select(Function(p) CObj(p.Text)).ToArray())
             cboTarget.SelectedIndex = 0
-            Dim rbDelete As New RadioButton() With {.Text = "Delete the links too", .AutoSize = True, .Location = New Point(12, 78)}
+            Dim rbDelete As New RadioButton() With {.Text = "Delete the links too", .AutoSize = True,
+                                                    .Margin = New Padding(0, 0, 0, 10)}
             Dim lblBackup As New Label() With {
                 .Text = "A copy of the current layout is saved to BACKUP-XML first.",
-                .AutoSize = True, .Location = New Point(12, 108)
+                .AutoSize = True, .MaximumSize = New Size(TextWidth, 0), .Margin = New Padding(0, 0, 0, 12)
             }
             AddHandler rbMove.CheckedChanged, Sub() cboTarget.Enabled = rbMove.Checked
 
             Dim btnOK As New Button() With {
                 .Text = "Delete Tab", .DialogResult = DialogResult.OK,
-                .Size = New Size(96, 30), .Location = New Point(206, 136)
+                .AutoSize = True, .MinimumSize = New Size(96, 30), .Margin = New Padding(6, 0, 0, 0)
             }
             Dim btnCancel As New Button() With {
                 .Text = "Cancel", .DialogResult = DialogResult.Cancel,
-                .Size = New Size(80, 30), .Location = New Point(308, 136)
+                .AutoSize = True, .MinimumSize = New Size(80, 30), .Margin = New Padding(6, 0, 0, 0)
             }
+            Dim buttons As New FlowLayoutPanel() With {
+                .FlowDirection = FlowDirection.RightToLeft, .AutoSize = True,
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink, .Anchor = AnchorStyles.Right, .Margin = Padding.Empty
+            }
+            buttons.Controls.AddRange({btnCancel, btnOK})
+
+            layout.Controls.Add(lbl, 0, 0)
+            layout.SetColumnSpan(lbl, 2)
+            layout.Controls.Add(rbMove, 0, 1)
+            layout.Controls.Add(cboTarget, 1, 1)
+            layout.Controls.Add(rbDelete, 0, 2)
+            layout.SetColumnSpan(rbDelete, 2)
+            layout.Controls.Add(lblBackup, 0, 3)
+            layout.SetColumnSpan(lblBackup, 2)
+            layout.Controls.Add(buttons, 0, 4)
+            layout.SetColumnSpan(buttons, 2)
 
             ' No AcceptButton: Enter shouldn't delete anything.
-            dlg.Controls.AddRange({lbl, rbMove, cboTarget, rbDelete, lblBackup, btnOK, btnCancel})
+            dlg.Controls.Add(layout)
             dlg.CancelButton = btnCancel
             StyleDialog(dlg)
             dlg.ActiveControl = btnCancel
