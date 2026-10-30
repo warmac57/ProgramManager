@@ -124,6 +124,13 @@ Public Class frmMain
     ' The user's chosen screenshot folder, or Nothing to use the default.
     Private screenshotFolderOverride As String = Nothing
 
+    ' --- SCREENS tab: a grid tab with this name shows a full-tab screenshot viewer ---
+    ' The tab's grid (and any links on it) is kept but hidden behind the viewer, so the
+    ' links still save and still show on All Links. A folder link on the tab picks the
+    ' folder to show; otherwise the viewer shows the screenshot save folder.
+    Private Const ScreensTabName As String = "SCREENS"
+    Private ReadOnly screensViewers As New Dictionary(Of TabPage, ScreensViewer)()
+
     ' Timer that restores the title bar color after the green "saved" flash.
     Private titleFlashTimer As Timer
 
@@ -249,6 +256,72 @@ Public Class frmMain
 
         screenshotMonitor.SaveFolder = screenshotFolderOverride
         RefreshScreenshotFolderDisplay()
+        SyncScreensViewers()
+    End Sub
+
+    ' --- SCREENS tab viewer ---
+
+    Private Shared Function IsScreensTab(page As TabPage) As Boolean
+        Return String.Equals(page.Text.Trim(), ScreensTabName, StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    ''' <summary>
+    ''' Folder the SCREENS viewer shows: the first folder link on that tab, or else the
+    ''' folder screenshots are saved to.
+    ''' </summary>
+    Private Function ScreensFolderFor(page As TabPage) As String
+        For Each cell As Panel In OccupiedCells(GridOf(page))
+            For Each pb As PictureBox In cell.Controls.OfType(Of PictureBox)()
+                Dim path As String = pb.Tag?.ToString()
+                If Not String.IsNullOrEmpty(path) AndAlso IO.Directory.Exists(path) Then Return path
+            Next
+        Next
+        Return screenshotMonitor.SaveFolder
+    End Function
+
+    ''' <summary>
+    ''' Puts a screenshot viewer over every grid tab named SCREENS (and takes it off tabs
+    ''' that were renamed), and points each viewer at its folder. Cheap to call often.
+    ''' </summary>
+    Private Sub SyncScreensViewers()
+        ' Forget viewers whose tab was deleted or rebuilt (disposing the page disposed them).
+        For Each page As TabPage In screensViewers.Keys.ToList()
+            If page.IsDisposed OrElse Not TabControl1.TabPages.Contains(page) Then
+                screensViewers(page).Dispose()
+                screensViewers.Remove(page)
+            End If
+        Next
+
+        For Each page As TabPage In GridTabPages()
+            Dim viewer As ScreensViewer = Nothing
+            Dim hasViewer As Boolean = screensViewers.TryGetValue(page, viewer)
+
+            If IsScreensTab(page) Then
+                If Not hasViewer Then
+                    viewer = New ScreensViewer()
+                    page.Controls.Add(viewer)
+                    viewer.BringToFront()
+                    GridOf(page).Visible = False
+                    screensViewers(page) = viewer
+                    ThemeScreensViewer(viewer)
+                End If
+                viewer.Folder = ScreensFolderFor(page)
+            ElseIf hasViewer Then
+                ' Renamed away from SCREENS: back to the normal icon grid.
+                screensViewers.Remove(page)
+                page.Controls.Remove(viewer)
+                viewer.Dispose()
+                GridOf(page).Visible = True
+            End If
+        Next
+    End Sub
+
+    Private Sub ThemeScreensViewer(viewer As ScreensViewer)
+        If isDarkMode Then
+            viewer.ApplyTheme(DarkTabBack, DarkControlBack, DarkForeColor)
+        Else
+            viewer.ApplyTheme(SystemColors.Window, LightControlBack, LightForeColor)
+        End If
     End Sub
 
     ''' <summary>Shows the active screenshot folder, flagging the default case.</summary>
@@ -300,7 +373,15 @@ Public Class frmMain
     Private Sub OnScreenshotSaved(sender As Object, e As EventArgs)
         If IsHandleCreated Then
             BeginInvoke(New Action(AddressOf FlashTitleBarSaved))
+            BeginInvoke(New Action(AddressOf ShowNewestScreenshot))
         End If
+    End Sub
+
+    ' A new capture always jumps the SCREENS viewer to it, even if an older one was showing.
+    Private Sub ShowNewestScreenshot()
+        For Each viewer As ScreensViewer In screensViewers.Values
+            viewer.ShowNewest()
+        Next
     End Sub
 
     Private Sub FlashTitleBarSaved()
@@ -503,6 +584,7 @@ Public Class frmMain
     ''' <summary>Saves, then refreshes both lists on All Links so they show the new tab set.</summary>
     Private Sub AfterTabsChanged(selectPage As TabPage)
         SaveLayout()
+        SyncScreensViewers()
         RefreshTabList(selectPage)
         If TabControl1.SelectedTab Is tabAllLinks Then RefreshAllLinksList()
     End Sub
@@ -1058,6 +1140,10 @@ Public Class frmMain
             tabAllLinks.UseVisualStyleBackColor = True
             StyleTab5Controls(SystemColors.Window, LightControlBack, LightForeColor)
         End If
+
+        For Each viewer As ScreensViewer In screensViewers.Values
+            ThemeScreensViewer(viewer)
+        Next
     End Sub
 
     Private Sub StyleTab5Controls(backColor As Color, controlBack As Color, foreColor As Color)
@@ -1086,6 +1172,12 @@ Public Class frmMain
     End Sub
 
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs)
+        ' Opening SCREENS picks up a changed folder link (edited on All Links) and new files.
+        If TabControl1.SelectedTab IsNot Nothing AndAlso screensViewers.ContainsKey(TabControl1.SelectedTab) Then
+            SyncScreensViewers()
+            screensViewers(TabControl1.SelectedTab).Rescan()
+        End If
+
         If TabControl1.SelectedTab Is tabAllLinks Then
             RefreshAllLinksList()
             ' Also refresh the tab list to reflect current names and link counts.
@@ -2560,6 +2652,8 @@ Public Class frmMain
             CreateDefaultTabs()
             ApplyTheme()
         End If
+
+        SyncScreensViewers()
     End Sub
 
     ''' <summary>
