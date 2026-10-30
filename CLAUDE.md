@@ -5,7 +5,7 @@ A Windows desktop launcher written in **VB.NET WinForms** (.NET 10, `net10.0-win
 ## Workflow
 
 - Work on the local files on `main`. Don't create branches or pull requests.
-- Don't commit or push. `Release.ps1` commits, pushes to `main`, and publishes the GitHub release once the owner has tested a change.
+- Don't commit or push. After testing, the owner commits and pushes with GitHub Desktop (which also shows them the diff). `Release.ps1` commits anything left over, pushes to `main`, and publishes the GitHub release.
 - Before handing a change over, build it the way the release does and fix every error:
   `dotnet build .\ProgramManager.vbproj -c Release`
   (The release build runs WinForms analyzers that can fail where a Visual Studio Debug build did not, e.g. WFO1000 on public properties of a control: mark code-only properties `Browsable(False)` and `DesignerSerializationVisibility(Hidden)`.)
