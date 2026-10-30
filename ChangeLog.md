@@ -9,6 +9,7 @@
 - The viewer shows the screenshot save folder, or the first folder link on the SCREENS tab if it has one. It watches the folder, so a new `Prt Sc` capture appears straight away; captures from other tools appear too while the newest one is on screen.
 - Pictures are read into memory and the file is closed at once, so Paint can save over a screenshot that is on screen.
 - New `ScreensViewer.vb` holds the viewer.
+- `ScreensViewer.Folder` is hidden from the designer, which fixes the WFO1000 error that stopped `dotnet publish` (and so `Release.ps1`).
 
 ### Changed - Release Script
 - The release notes template now lists the SCREENS tab viewer in its features and Getting Started steps.

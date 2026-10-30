@@ -102,8 +102,10 @@ Public Class ScreensViewer
 
     ''' <summary>
     ''' Folder whose pictures are shown. Changing it rescans the folder, shows its newest
-    ''' picture, and moves the watcher there.
+    ''' picture, and moves the watcher there. Set from code only, so the designer never saves it.
     ''' </summary>
+    <System.ComponentModel.Browsable(False)>
+    <System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)>
     Public Property Folder As String
         Get
             Return _folder
