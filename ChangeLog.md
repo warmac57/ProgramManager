@@ -10,6 +10,9 @@
 - Pictures are read into memory and the file is closed at once, so Paint can save over a screenshot that is on screen.
 - New `ScreensViewer.vb` holds the viewer.
 
+### Changed - Release Script
+- The release notes template now lists the SCREENS tab viewer in its features and Getting Started steps.
+
 ## 2026-10-18 (after v1.3.0)
 
 ### Changed - Release Script

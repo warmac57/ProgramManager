@@ -111,6 +111,7 @@ $Message
 - **Dark / light mode** - Switch themes from the management tab; preference is persisted
 - **Create App Shortcuts** - One click builds a Documents\All Apps Shortcuts folder with a shortcut to every app in the Windows All Apps list and opens it in File Explorer
 - **Print Screen capture** - While Program Manager is running, Prt Sc saves a full-screen capture to a folder you choose
+- **SCREENS tab viewer** - Name a tab SCREENS and it shows the newest screenshot across the whole tab; page through older ones with the scroll bar, mouse wheel or arrow keys, and double-click one to open it in Paint
 - **Roll-up** - Double-click the title bar to collapse the window to just the title bar
 - **Automatic XML backups** - On every launch, both data files are backed up to a BACKUP-XML subfolder; the last 10 backups per file are retained, plus a kept copy before every tab delete or restore
 - **Restore from backup** - Reload the whole layout from any backup; the current layout is saved first so a restore can be undone
@@ -137,6 +138,7 @@ No installer required. All settings are stored next to the executable.
 3. Drag icons between cells to rearrange
 4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove; web links also get Refresh Preview, Choose Image, and Paste Image)
 5. Use the **All Links** tab to edit links, manage tabs, restore a backup, toggle dark mode, and set the screenshot folder
+6. Name a tab **SCREENS** to turn it into a screenshot viewer: press Prt Sc and the capture appears there
 "@
 
 # Capture gh's output so a failure shows its real error. Windows PowerShell turns a
