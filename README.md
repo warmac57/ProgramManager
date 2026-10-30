@@ -19,6 +19,7 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 - **Create App Shortcuts** - One click builds a `Documents\All Apps Shortcuts` folder with a shortcut to every app in the Windows All Apps list (including Store apps) and opens it in File Explorer, ready to drag onto the grid
 - **Print Screen capture** - While Program Manager is running, pressing `Prt Sc` saves a full-screen capture to `screens_<timestamp>.jpg`; the title bar briefly flashes green to confirm the save (Windows 11)
 - **Custom screenshot folder** - Captures save to `Pictures\Screens` by default, or drag a folder onto the **Screenshots** drop-box on the All Links tab to choose your own location; the choice is persisted and a **Use Default Folder** button reverts it
+- **SCREENS tab viewer** - Name a tab `SCREENS` and it shows the newest screenshot across the whole tab; page through older ones with the scroll bar, mouse wheel or arrow keys, and double-click a screenshot to open it in Paint
 - **Roll-up** - Double-click the title bar to collapse the window to just the title bar
 - **Automatic XML backups** - On every launch, both data files are backed up to a `BACKUP-XML` subfolder; the last 10 backups per file are retained, plus a kept copy before every tab delete or restore
 - **Restore from backup** - Reload the whole layout from any backup on the All Links tab; the current layout is saved first so a restore can be undone

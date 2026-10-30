@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-30
+
+### Added - SCREENS Tab Screenshot Viewer
+- A grid tab named **SCREENS** (any capitalisation) now shows a full-tab viewer of the newest screenshot instead of the icon grid. Rename a tab to or from SCREENS to switch it on or off; the tab's links are kept (hidden) and still listed on All Links.
+- Page through older screenshots with the scroll bar along the bottom, the mouse wheel (up = newer, down = older), the arrow / Page Up / Page Down / Home / End keys, or the toolbar buttons. The toolbar shows the position, file name and time.
+- Double-click the picture (or click **Open in Paint**) to open it in Paint. **Open Folder** opens File Explorer with the screenshot selected.
+- The viewer shows the screenshot save folder, or the first folder link on the SCREENS tab if it has one. It watches the folder, so a new `Prt Sc` capture appears straight away; captures from other tools appear too while the newest one is on screen.
+- Pictures are read into memory and the file is closed at once, so Paint can save over a screenshot that is on screen.
+- New `ScreensViewer.vb` holds the viewer.
+
 ## 2026-10-18 (after v1.3.0)
 
 ### Changed - Release Script
