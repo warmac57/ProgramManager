@@ -17,6 +17,7 @@
 ### Changed - Docs
 - `Help.md` has a new **Screenshots & the SCREENS Tab** section covering Prt Sc capture, the screenshot folder, and the viewer.
 - `README.md` has a 2026-10-30 Recent Changes entry and a Usage step for the SCREENS tab, and names the screenshot folder's **Default** button correctly.
+- `README.md` Screenshots section shows the SCREENS tab (`docs/images/ProgramMan4.jpg`).
 
 ## 2026-10-18 (after v1.3.0)
 

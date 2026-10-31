@@ -41,6 +41,10 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 
 <img width="640" alt="Program Manager All Links tab with tab list, link list, and link editor" src="docs/images/ProgramMan3.jpg" />
 
+**SCREENS tab** - name a tab SCREENS and the newest screenshot fills it; page through older ones with the toolbar, scroll bar or mouse wheel, and double-click to open one in Paint
+
+<img width="640" alt="Program Manager SCREENS tab showing the newest screenshot with the paging toolbar, Open in Paint and Open Folder buttons" src="docs/images/ProgramMan4.jpg" />
+
 ## Download and Run
 
 1. Install the [.NET 10.0 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) if you don't already have it. Choose the **.NET Desktop Runtime** for Windows x64.
