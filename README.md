@@ -18,7 +18,7 @@ Desktop Folders can be created and loaded into the grid, and then the hidden fil
 - **First-run setup** - On first launch, offers to add Program Manager to your Startup folder and puts a link to a freshly built All Apps shortcuts folder on the first tab
 - **Create App Shortcuts** - One click builds a `Documents\All Apps Shortcuts` folder with a shortcut to every app in the Windows All Apps list (including Store apps) and opens it in File Explorer, ready to drag onto the grid
 - **Print Screen capture** - While Program Manager is running, pressing `Prt Sc` saves a full-screen capture to `screens_<timestamp>.jpg`; the title bar briefly flashes green to confirm the save (Windows 11)
-- **Custom screenshot folder** - Captures save to `Pictures\Screens` by default, or drag a folder onto the **Screenshots** drop-box on the All Links tab to choose your own location; the choice is persisted and a **Use Default Folder** button reverts it
+- **Custom screenshot folder** - Captures save to `Pictures\Screens` by default, or drag a folder onto the **Screenshots** drop-box on the All Links tab to choose your own location; the choice is persisted and the **Default** button reverts it
 - **SCREENS tab viewer** - Name a tab `SCREENS` and it shows the newest screenshot across the whole tab; page through older ones with the scroll bar, mouse wheel or arrow keys, and double-click a screenshot to open it in Paint
 - **Roll-up** - Double-click the title bar to collapse the window to just the title bar
 - **Automatic XML backups** - On every launch, both data files are backed up to a `BACKUP-XML` subfolder; the last 10 backups per file are retained, plus a kept copy before every tab delete or restore
@@ -76,6 +76,7 @@ dotnet run
 3. Drag icons between cells to rearrange.
 4. Right-click an icon for options (Open Containing Folder, Edit Note, Hide Folder, Remove; web links also get Refresh Preview, Choose Image, and Paste Image).
 5. Use the All Links tab to edit any link (select its row), add, rename, reorder, and delete tabs, restore a backup, toggle dark mode, set the screenshot save folder, and view all shortcuts with their notes in a list. Tab commands are also on the right-click menu of each tab header.
+6. Name a tab **SCREENS** to turn it into a screenshot viewer: press `Prt Sc` and the capture appears there; double-click it to open it in Paint.
 
 For detailed feature documentation, see [Help.md](Help.md).
 
@@ -97,6 +98,14 @@ All data is stored in the application directory (portable, no registry or AppDat
 Copy the entire application folder to a new location to run independent instances. Each copy maintains its own settings and shortcuts.
 
 ## Recent Changes
+
+### 2026-10-30 (v1.4.0)
+
+- New **SCREENS tab viewer**: name a tab `SCREENS` and it shows the newest screenshot across the whole tab instead of the icon grid
+- Page through older screenshots with the scroll bar, the mouse wheel (up = newer, down = older), the arrow / Page Up / Page Down / Home / End keys, or the toolbar buttons; the toolbar shows the position, file name and time
+- Double-click a screenshot (or click **Open in Paint**) to open it in Paint; **Open Folder** shows it in File Explorer
+- A new `Prt Sc` capture appears in the viewer straight away
+- The release notes template in `Release.ps1` now covers the SCREENS tab
 
 ### 2026-10-18
 

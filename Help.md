@@ -150,6 +150,40 @@ If you move to another row, leave the All Links tab, or close the app with unsav
 
 ---
 
+## Screenshots & the SCREENS Tab
+
+### Print Screen Capture
+
+- While Program Manager is running, pressing **Prt Sc** saves a capture of the whole screen (all monitors) as a JPEG, even when another window has the focus.
+- Files are named `screens_yyyy-MM-dd_HH-mm-ss.jpg`; a counter is added if two captures land in the same second.
+- The title bar briefly flashes green to confirm the save (Windows 11).
+- The clipboard is left untouched.
+
+### Choosing the Screenshot Folder
+
+- Captures go to `Pictures\Screens` by default.
+- To use another folder, drag it onto the **Screenshots** box on the All Links tab. Click **Default** to go back to `Pictures\Screens`.
+- The choice is saved in `ProgramManagerLayout.xml`. If the saved folder no longer exists, the default is used.
+
+### The SCREENS Tab
+
+Name any grid tab **SCREENS** (capitals don't matter) and the whole tab becomes a screenshot viewer:
+
+- It shows the **newest screenshot** in the screenshot folder. If the SCREENS tab holds a link to a folder, that folder is shown instead.
+- A new **Prt Sc** capture appears straight away. Pictures saved into the folder by other tools appear too, while you are looking at the newest one.
+- **Paging through screenshots:**
+  - The **scroll bar** along the bottom runs from the oldest (left) to the newest (right).
+  - **Mouse wheel** up shows a newer screenshot, down an older one.
+  - After clicking the picture, **Left / Right**, **Page Up / Page Down**, **Home** (oldest) and **End** (newest) also work.
+  - The toolbar buttons go to the oldest, older, newer and newest screenshot. The toolbar also shows the position, file name and time.
+- **Double-click** the picture, or click **Open in Paint**, to open it in Paint. Paint can save over the screenshot while it is on screen.
+- **Open Folder** opens File Explorer with the screenshot selected.
+- JPG, PNG, BMP and GIF pictures are shown, sorted by the time they were last saved.
+
+Links you had on the tab are kept, hidden behind the viewer, and still appear on the All Links tab, where you can edit them. Rename the tab to anything else to get its icon grid back.
+
+---
+
 ## Dark / Light Mode
 
 - On the All Links tab, click the **"Switch to Dark Mode"** button to toggle the theme.
@@ -190,7 +224,7 @@ If the shortcut script fails, a message explains why and you can run it later fr
 
 All settings are saved automatically when the application closes:
 
-- **ProgramManagerLayout.xml** - Stores all shortcut positions, tab names, notes, custom link names, and the dark mode preference.
+- **ProgramManagerLayout.xml** - Stores all shortcut positions, tab names, notes, custom link names, the dark mode preference, and the chosen screenshot folder.
 - **ProgramManagerSettings.xml** - Stores window size, position, and state.
 
 Both files are saved in the same directory as the application executable. Preview pictures for web links are kept in the **Links** subfolder.
